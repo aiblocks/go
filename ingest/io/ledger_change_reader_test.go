@@ -7,9 +7,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/stellar/go/ingest/ledgerbackend"
-	"github.com/stellar/go/network"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/ingest/ledgerbackend"
+	"github.com/aiblocks/go/network"
+	"github.com/aiblocks/go/xdr"
 )
 
 const (
@@ -259,7 +259,7 @@ func TestLedgerChangeReaderOrder(t *testing.T) {
 		t,
 		err,
 		"error extracting transactions from ledger close meta: TransactionMeta.V=2 is required in protocol"+
-			" version older than version 10. Please process ledgers again using the latest stellar-core version.",
+			" version older than version 10. Please process ledgers again using the latest aiblocks-core version.",
 	)
 	mock.AssertExpectations(t)
 

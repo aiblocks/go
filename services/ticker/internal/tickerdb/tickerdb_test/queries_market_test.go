@@ -8,9 +8,9 @@ import (
 	"time"
 
 	migrate "github.com/rubenv/sql-migrate"
-	"github.com/stellar/go/services/ticker/internal/tickerdb"
-	"github.com/stellar/go/services/ticker/internal/tickerdb/tickerdbtest"
-	"github.com/stellar/go/support/db/dbtest"
+	"github.com/aiblocks/go/services/ticker/internal/tickerdb"
+	"github.com/aiblocks/go/services/ticker/internal/tickerdb/tickerdbtest"
+	"github.com/aiblocks/go/support/db/dbtest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -50,13 +50,13 @@ func TestRetrieveMarketData(t *testing.T) {
 
 	// Adding a seed asset to be used later:
 	err = session.InsertOrUpdateAsset(&tickerdb.Asset{
-		Code:     "XLM",
+		Code:     "DLO",
 		IssuerID: issuer.ID,
 		IsValid:  true,
 	}, []string{"code", "issuer_id"})
 	require.NoError(t, err)
-	var xlmAsset tickerdb.Asset
-	err = session.GetRaw(&xlmAsset, `
+	var dloAsset tickerdb.Asset
+	err = session.GetRaw(&dloAsset, `
 		SELECT *
 		FROM assets
 		ORDER BY id DESC
@@ -97,9 +97,9 @@ func TestRetrieveMarketData(t *testing.T) {
 	require.NoError(t, err)
 
 	// Verify that we actually have three assets:
-	assert.NotEqual(t, xlmAsset.ID, btcAsset.ID)
+	assert.NotEqual(t, dloAsset.ID, btcAsset.ID)
 	assert.NotEqual(t, btcAsset.ID, ethAsset.ID)
-	assert.NotEqual(t, xlmAsset.ID, ethAsset.ID)
+	assert.NotEqual(t, dloAsset.ID, ethAsset.ID)
 
 	// A few times to be used:
 	now := time.Now()
@@ -109,45 +109,45 @@ func TestRetrieveMarketData(t *testing.T) {
 
 	// Now let's create the trades:
 	trades := []tickerdb.Trade{
-		tickerdb.Trade{ // XLM_BTC trade
-			HorizonID:       "hrzid1",
-			BaseAssetID:     xlmAsset.ID,
+		tickerdb.Trade{ // DLO_BTC trade
+			MillenniumID:       "hrzid1",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      100.0,
 			CounterAssetID:  btcAsset.ID,
 			CounterAmount:   10.0,
 			Price:           0.1,
 			LedgerCloseTime: now,
 		},
-		tickerdb.Trade{ // XLM_ETH trade
-			HorizonID:       "hrzid3",
-			BaseAssetID:     xlmAsset.ID,
+		tickerdb.Trade{ // DLO_ETH trade
+			MillenniumID:       "hrzid3",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      24.0,
 			CounterAssetID:  ethAsset.ID,
 			CounterAmount:   26.0,
 			Price:           0.92,
 			LedgerCloseTime: oneHourAgo,
 		},
-		tickerdb.Trade{ // XLM_ETH trade
-			HorizonID:       "hrzid2",
-			BaseAssetID:     xlmAsset.ID,
+		tickerdb.Trade{ // DLO_ETH trade
+			MillenniumID:       "hrzid2",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      50.0,
 			CounterAssetID:  ethAsset.ID,
 			CounterAmount:   50.0,
 			Price:           1.0,
 			LedgerCloseTime: now,
 		},
-		tickerdb.Trade{ // XLM_BTC trade
-			HorizonID:       "hrzid4",
-			BaseAssetID:     xlmAsset.ID,
+		tickerdb.Trade{ // DLO_BTC trade
+			MillenniumID:       "hrzid4",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      50.0,
 			CounterAssetID:  btcAsset.ID,
 			CounterAmount:   6.0,
 			Price:           0.12,
 			LedgerCloseTime: threeDaysAgo,
 		},
-		tickerdb.Trade{ // XLM_ETH trade
-			HorizonID:       "hrzid5",
-			BaseAssetID:     xlmAsset.ID,
+		tickerdb.Trade{ // DLO_ETH trade
+			MillenniumID:       "hrzid5",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      24.0,
 			CounterAssetID:  ethAsset.ID,
 			CounterAmount:   28.0,
@@ -161,7 +161,7 @@ func TestRetrieveMarketData(t *testing.T) {
 	// Adding some orderbook stats:
 	obTime := time.Now()
 	orderbookStats := tickerdb.OrderbookStats{
-		BaseAssetID:    xlmAsset.ID,
+		BaseAssetID:    dloAsset.ID,
 		CounterAssetID: ethAsset.ID,
 		NumBids:        15,
 		BidVolume:      0.15,
@@ -189,7 +189,7 @@ func TestRetrieveMarketData(t *testing.T) {
 	require.NoError(t, err)
 
 	orderbookStats = tickerdb.OrderbookStats{
-		BaseAssetID:    xlmAsset.ID,
+		BaseAssetID:    dloAsset.ID,
 		CounterAssetID: btcAsset.ID,
 		NumBids:        1,
 		BidVolume:      0.1,
@@ -222,86 +222,86 @@ func TestRetrieveMarketData(t *testing.T) {
 	assert.Equal(t, 2, len(markets))
 
 	// Mapping the retrieved markets:
-	var xlmbtcMkt, xlmethMkt tickerdb.Market
+	var dlobtcMkt, dloethMkt tickerdb.Market
 	for _, mkt := range markets {
-		if mkt.TradePair == "XLM_BTC" {
-			xlmbtcMkt = mkt
+		if mkt.TradePair == "DLO_BTC" {
+			dlobtcMkt = mkt
 		}
 
-		if mkt.TradePair == "XLM_ETH" {
-			xlmethMkt = mkt
+		if mkt.TradePair == "DLO_ETH" {
+			dloethMkt = mkt
 		}
 	}
-	assert.NotEqual(t, "", xlmbtcMkt.TradePair)
-	assert.NotEqual(t, "", xlmethMkt.TradePair)
+	assert.NotEqual(t, "", dlobtcMkt.TradePair)
+	assert.NotEqual(t, "", dloethMkt.TradePair)
 
 	// Validating the aggregated data
-	assert.Equal(t, 100.0, xlmbtcMkt.BaseVolume24h)
-	assert.Equal(t, 10.0, xlmbtcMkt.CounterVolume24h)
-	assert.Equal(t, int64(1), xlmbtcMkt.TradeCount24h)
-	assert.Equal(t, 0.1, xlmbtcMkt.OpenPrice24h)
-	assert.Equal(t, 0.1, xlmbtcMkt.LowestPrice24h)
-	assert.Equal(t, 0.1, xlmbtcMkt.HighestPrice24h)
+	assert.Equal(t, 100.0, dlobtcMkt.BaseVolume24h)
+	assert.Equal(t, 10.0, dlobtcMkt.CounterVolume24h)
+	assert.Equal(t, int64(1), dlobtcMkt.TradeCount24h)
+	assert.Equal(t, 0.1, dlobtcMkt.OpenPrice24h)
+	assert.Equal(t, 0.1, dlobtcMkt.LowestPrice24h)
+	assert.Equal(t, 0.1, dlobtcMkt.HighestPrice24h)
 
-	assert.Equal(t, 150.0, xlmbtcMkt.BaseVolume7d)
-	assert.Equal(t, 16.0, xlmbtcMkt.CounterVolume7d)
-	assert.Equal(t, int64(2), xlmbtcMkt.TradeCount7d)
-	assert.Equal(t, 0.12, xlmbtcMkt.OpenPrice7d)
-	assert.Equal(t, 0.1, xlmbtcMkt.LowestPrice7d)
-	assert.Equal(t, 0.12, xlmbtcMkt.HighestPrice7d)
+	assert.Equal(t, 150.0, dlobtcMkt.BaseVolume7d)
+	assert.Equal(t, 16.0, dlobtcMkt.CounterVolume7d)
+	assert.Equal(t, int64(2), dlobtcMkt.TradeCount7d)
+	assert.Equal(t, 0.12, dlobtcMkt.OpenPrice7d)
+	assert.Equal(t, 0.1, dlobtcMkt.LowestPrice7d)
+	assert.Equal(t, 0.12, dlobtcMkt.HighestPrice7d)
 
-	assert.Equal(t, 0.1, xlmbtcMkt.LastPrice)
-	assert.WithinDuration(t, now.Local(), xlmbtcMkt.LastPriceCloseTime.Local(), 10*time.Millisecond)
+	assert.Equal(t, 0.1, dlobtcMkt.LastPrice)
+	assert.WithinDuration(t, now.Local(), dlobtcMkt.LastPriceCloseTime.Local(), 10*time.Millisecond)
 
-	assert.Equal(t, 0.0, xlmbtcMkt.PriceChange24h)
+	assert.Equal(t, 0.0, dlobtcMkt.PriceChange24h)
 	// There might be some floating point rounding issues, so this test
 	// needs to be a bit more flexible. Since the change is 0.02, an error
 	// around 0.0000000000001 is acceptable:
-	priceChange7dDiff := math.Abs(-0.02 - xlmbtcMkt.PriceChange7d)
+	priceChange7dDiff := math.Abs(-0.02 - dlobtcMkt.PriceChange7d)
 	assert.True(t, priceChange7dDiff < 0.0000000000001)
 
-	assert.Equal(t, 74.0, xlmethMkt.BaseVolume24h)
-	assert.Equal(t, 76.0, xlmethMkt.CounterVolume24h)
-	assert.Equal(t, int64(2), xlmethMkt.TradeCount24h)
-	assert.Equal(t, 0.92, xlmethMkt.OpenPrice24h)
-	assert.Equal(t, 0.92, xlmethMkt.LowestPrice24h)
-	assert.Equal(t, 1.0, xlmethMkt.HighestPrice24h)
+	assert.Equal(t, 74.0, dloethMkt.BaseVolume24h)
+	assert.Equal(t, 76.0, dloethMkt.CounterVolume24h)
+	assert.Equal(t, int64(2), dloethMkt.TradeCount24h)
+	assert.Equal(t, 0.92, dloethMkt.OpenPrice24h)
+	assert.Equal(t, 0.92, dloethMkt.LowestPrice24h)
+	assert.Equal(t, 1.0, dloethMkt.HighestPrice24h)
 
-	assert.Equal(t, 74.0, xlmethMkt.BaseVolume7d)
-	assert.Equal(t, 76.0, xlmethMkt.CounterVolume7d)
-	assert.Equal(t, int64(2), xlmethMkt.TradeCount7d)
-	assert.Equal(t, 0.92, xlmethMkt.OpenPrice7d)
-	assert.Equal(t, 0.92, xlmethMkt.LowestPrice7d)
-	assert.Equal(t, 1.0, xlmethMkt.HighestPrice7d)
+	assert.Equal(t, 74.0, dloethMkt.BaseVolume7d)
+	assert.Equal(t, 76.0, dloethMkt.CounterVolume7d)
+	assert.Equal(t, int64(2), dloethMkt.TradeCount7d)
+	assert.Equal(t, 0.92, dloethMkt.OpenPrice7d)
+	assert.Equal(t, 0.92, dloethMkt.LowestPrice7d)
+	assert.Equal(t, 1.0, dloethMkt.HighestPrice7d)
 
-	assert.Equal(t, 1.0, xlmethMkt.LastPrice)
-	assert.WithinDuration(t, now.Local(), xlmbtcMkt.LastPriceCloseTime.Local(), 10*time.Millisecond)
+	assert.Equal(t, 1.0, dloethMkt.LastPrice)
+	assert.WithinDuration(t, now.Local(), dlobtcMkt.LastPriceCloseTime.Local(), 10*time.Millisecond)
 
 	// There might be some floating point rounding issues, so this test
 	// needs to be a bit more flexible. Since the change is 0.08, an error
 	// around 0.0000000000001 is acceptable:
-	priceChange24hDiff := math.Abs(0.08 - xlmethMkt.PriceChange24h)
+	priceChange24hDiff := math.Abs(0.08 - dloethMkt.PriceChange24h)
 	assert.True(t, priceChange24hDiff < 0.0000000000001)
 
-	priceChange7dDiff = math.Abs(0.08 - xlmethMkt.PriceChange7d)
+	priceChange7dDiff = math.Abs(0.08 - dloethMkt.PriceChange7d)
 	assert.True(t, priceChange7dDiff < 0.0000000000001)
 
 	assert.Equal(t, priceChange24hDiff, priceChange7dDiff)
 
 	// Analysing aggregated orderbook data:
-	assert.Equal(t, 15, xlmethMkt.NumBids)
-	assert.Equal(t, 0.15, xlmethMkt.BidVolume)
-	assert.Equal(t, 200.0, xlmethMkt.HighestBid)
-	assert.Equal(t, 17, xlmethMkt.NumAsks)
-	assert.Equal(t, 30.0, xlmethMkt.AskVolume)
-	assert.Equal(t, 0.1, xlmethMkt.LowestAsk)
+	assert.Equal(t, 15, dloethMkt.NumBids)
+	assert.Equal(t, 0.15, dloethMkt.BidVolume)
+	assert.Equal(t, 200.0, dloethMkt.HighestBid)
+	assert.Equal(t, 17, dloethMkt.NumAsks)
+	assert.Equal(t, 30.0, dloethMkt.AskVolume)
+	assert.Equal(t, 0.1, dloethMkt.LowestAsk)
 
-	assert.Equal(t, 1, xlmbtcMkt.NumBids)
-	assert.Equal(t, 0.1, xlmbtcMkt.BidVolume)
-	assert.Equal(t, 20.0, xlmbtcMkt.HighestBid)
-	assert.Equal(t, 1, xlmbtcMkt.NumAsks)
-	assert.Equal(t, 15.0, xlmbtcMkt.AskVolume)
-	assert.Equal(t, 0.2, xlmbtcMkt.LowestAsk)
+	assert.Equal(t, 1, dlobtcMkt.NumBids)
+	assert.Equal(t, 0.1, dlobtcMkt.BidVolume)
+	assert.Equal(t, 20.0, dlobtcMkt.HighestBid)
+	assert.Equal(t, 1, dlobtcMkt.NumAsks)
+	assert.Equal(t, 15.0, dlobtcMkt.AskVolume)
+	assert.Equal(t, 0.2, dlobtcMkt.LowestAsk)
 }
 
 func TestRetrievePartialMarkets(t *testing.T) {
@@ -431,8 +431,8 @@ func TestRetrievePartialMarkets(t *testing.T) {
 	assert.Equal(t, 0.2, partialAggMkt.LowestAskReverse)
 
 	// Validate that both markets are parsed.
-	btcXlmStr := "BTC_XLM"
-	pairNames = []*string{&btcEthStr, &btcXlmStr}
+	btcDloStr := "BTC_DLO"
+	pairNames = []*string{&btcEthStr, &btcDloStr}
 	partialAggMkts, err = session.RetrievePartialAggMarkets(nil, &pairNames, 12)
 	require.NoError(t, err)
 	assert.Equal(t, 2, len(partialAggMkts))
@@ -485,13 +485,13 @@ func Test24hStatsFallback(t *testing.T) {
 
 	// Adding a seed asset to be used later:
 	err = session.InsertOrUpdateAsset(&tickerdb.Asset{
-		Code:     "XLM",
+		Code:     "DLO",
 		IssuerID: issuer.ID,
 		IsValid:  true,
 	}, []string{"code", "issuer_id"})
 	require.NoError(t, err)
-	var xlmAsset tickerdb.Asset
-	err = session.GetRaw(&xlmAsset, `
+	var dloAsset tickerdb.Asset
+	err = session.GetRaw(&dloAsset, `
 		SELECT *
 		FROM assets
 		ORDER BY id DESC
@@ -523,8 +523,8 @@ func Test24hStatsFallback(t *testing.T) {
 	// Now let's create the trades:
 	trades := []tickerdb.Trade{
 		tickerdb.Trade{
-			HorizonID:       "hrzid1",
-			BaseAssetID:     xlmAsset.ID,
+			MillenniumID:       "hrzid1",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      1.0,
 			CounterAssetID:  btcAsset.ID,
 			CounterAmount:   1.0,
@@ -532,8 +532,8 @@ func Test24hStatsFallback(t *testing.T) {
 			LedgerCloseTime: twoDaysAgo,
 		},
 		tickerdb.Trade{ // BTC_ETH trade (ETH is from issuer 2)
-			HorizonID:       "hrzid2",
-			BaseAssetID:     xlmAsset.ID,
+			MillenniumID:       "hrzid2",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      1.0,
 			CounterAssetID:  btcAsset.ID,
 			CounterAmount:   1.0,
@@ -591,13 +591,13 @@ func TestPreferAnchorAssetCode(t *testing.T) {
 
 	// Adding a seed asset to be used later:
 	err = session.InsertOrUpdateAsset(&tickerdb.Asset{
-		Code:     "XLM",
+		Code:     "DLO",
 		IssuerID: issuer.ID,
 		IsValid:  true,
 	}, []string{"code", "issuer_id"})
 	require.NoError(t, err)
-	var xlmAsset tickerdb.Asset
-	err = session.GetRaw(&xlmAsset, `
+	var dloAsset tickerdb.Asset
+	err = session.GetRaw(&dloAsset, `
 		SELECT *
 		FROM assets
 		ORDER BY id DESC
@@ -630,8 +630,8 @@ func TestPreferAnchorAssetCode(t *testing.T) {
 	// Now let's create the trades:
 	trades := []tickerdb.Trade{
 		tickerdb.Trade{
-			HorizonID:       "hrzid1",
-			BaseAssetID:     xlmAsset.ID,
+			MillenniumID:       "hrzid1",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      1.0,
 			CounterAssetID:  btcAsset.ID,
 			CounterAmount:   1.0,
@@ -639,8 +639,8 @@ func TestPreferAnchorAssetCode(t *testing.T) {
 			LedgerCloseTime: twoDaysAgo,
 		},
 		tickerdb.Trade{ // BTC_ETH trade (ETH is from issuer 2)
-			HorizonID:       "hrzid2",
-			BaseAssetID:     xlmAsset.ID,
+			MillenniumID:       "hrzid2",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      1.0,
 			CounterAssetID:  btcAsset.ID,
 			CounterAmount:   1.0,
@@ -655,13 +655,13 @@ func TestPreferAnchorAssetCode(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 1, len(markets))
 	for _, mkt := range markets {
-		require.Equal(t, "XLM_EUR", mkt.TradePair)
+		require.Equal(t, "DLO_EUR", mkt.TradePair)
 	}
 
 	partialAggMkts, err := session.RetrievePartialAggMarkets(nil, nil, 168)
 	require.NoError(t, err)
 	assert.Equal(t, 1, len(partialAggMkts))
 	for _, aggMkt := range partialAggMkts {
-		require.Equal(t, "XLM_EUR", aggMkt.TradePairName)
+		require.Equal(t, "DLO_EUR", aggMkt.TradePairName)
 	}
 }

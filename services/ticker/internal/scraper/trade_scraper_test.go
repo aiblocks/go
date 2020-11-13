@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	hProtocol "github.com/stellar/go/protocols/horizon"
+	hProtocol "github.com/aiblocks/go/protocols/millennium"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -74,14 +74,14 @@ func TestAddNativeData(t *testing.T) {
 	}
 
 	addNativeData(&trade1)
-	assert.Equal(t, "XLM", trade1.BaseAssetCode)
+	assert.Equal(t, "DLO", trade1.BaseAssetCode)
 	assert.Equal(t, "native", trade1.BaseAssetIssuer)
 
 	trade2 := hProtocol.Trade{
 		CounterAssetType: "native",
 	}
 	addNativeData(&trade2)
-	assert.Equal(t, "XLM", trade2.CounterAssetCode)
+	assert.Equal(t, "DLO", trade2.CounterAssetCode)
 	assert.Equal(t, "native", trade2.CounterAssetIssuer)
 }
 

@@ -1,4 +1,4 @@
-module github.com/stellar/go
+module github.com/aiblocks/go
 
 go 1.13
 

@@ -9,12 +9,12 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/stellar/go/exp/services/captivecore/internal"
-	"github.com/stellar/go/ingest/ledgerbackend"
-	"github.com/stellar/go/network"
-	"github.com/stellar/go/support/config"
-	supporthttp "github.com/stellar/go/support/http"
-	supportlog "github.com/stellar/go/support/log"
+	"github.com/aiblocks/go/exp/services/captivecore/internal"
+	"github.com/aiblocks/go/ingest/ledgerbackend"
+	"github.com/aiblocks/go/network"
+	"github.com/aiblocks/go/support/config"
+	supporthttp "github.com/aiblocks/go/support/http"
+	supportlog "github.com/aiblocks/go/support/log"
 )
 
 func main() {
@@ -35,26 +35,26 @@ func main() {
 		},
 		{
 			Name:        "network-passphrase",
-			Usage:       "Network passphrase of the Stellar network transactions should be signed for",
+			Usage:       "Network passphrase of the AiBlocks network transactions should be signed for",
 			OptType:     types.String,
 			ConfigKey:   &networkPassphrase,
 			FlagDefault: network.TestNetworkPassphrase,
 			Required:    true,
 		},
 		&config.ConfigOption{
-			Name:        "stellar-core-binary-path",
+			Name:        "aiblocks-core-binary-path",
 			OptType:     types.String,
 			FlagDefault: "",
 			Required:    true,
-			Usage:       "path to stellar core binary",
+			Usage:       "path to aiblocks core binary",
 			ConfigKey:   &binaryPath,
 		},
 		&config.ConfigOption{
-			Name:        "stellar-core-config-path",
+			Name:        "aiblocks-core-config-path",
 			OptType:     types.String,
 			FlagDefault: "",
 			Required:    false,
-			Usage:       "path to stellar core config file",
+			Usage:       "path to aiblocks core config file",
 			ConfigKey:   &configPath,
 		},
 		&config.ConfigOption{
@@ -69,7 +69,7 @@ func main() {
 
 				*(co.ConfigKey.(*[]string)) = urlStrings
 			},
-			Usage: "comma-separated list of stellar history archives to connect with",
+			Usage: "comma-separated list of aiblocks history archives to connect with",
 		},
 		&config.ConfigOption{
 			Name:        "log-level",

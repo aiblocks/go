@@ -9,8 +9,8 @@ import (
 
 	_ "github.com/lib/pq"
 	migrate "github.com/rubenv/sql-migrate"
-	"github.com/stellar/go/services/ticker/internal/tickerdb"
-	"github.com/stellar/go/support/db/dbtest"
+	"github.com/aiblocks/go/services/ticker/internal/tickerdb"
+	"github.com/aiblocks/go/support/db/dbtest"
 	"github.com/stretchr/testify/require"
 )
 
@@ -49,7 +49,7 @@ func TestBulkInsertTrades(t *testing.T) {
 
 	// Adding a seed asset to be used later:
 	err = session.InsertOrUpdateAsset(&tickerdb.Asset{
-		Code:     "XLM",
+		Code:     "DLO",
 		IssuerID: issuer.ID,
 	}, []string{"code", "issuer_id"})
 	require.NoError(t, err)
@@ -83,13 +83,13 @@ func TestBulkInsertTrades(t *testing.T) {
 	// Now let's create the trades:
 	trades := []tickerdb.Trade{
 		tickerdb.Trade{
-			HorizonID:       "hrzid1",
+			MillenniumID:       "hrzid1",
 			BaseAssetID:     asset1.ID,
 			CounterAssetID:  asset2.ID,
 			LedgerCloseTime: time.Now(),
 		},
 		tickerdb.Trade{
-			HorizonID:       "hrzid2",
+			MillenniumID:       "hrzid2",
 			BaseAssetID:     asset2.ID,
 			CounterAssetID:  asset1.ID,
 			LedgerCloseTime: time.Now(),
@@ -159,7 +159,7 @@ func TestGetLastTrade(t *testing.T) {
 
 	// Adding a seed asset to be used later:
 	err = session.InsertOrUpdateAsset(&tickerdb.Asset{
-		Code:     "XLM",
+		Code:     "DLO",
 		IssuerID: issuer.ID,
 	}, []string{"code", "issuer_id"})
 	require.NoError(t, err)
@@ -196,19 +196,19 @@ func TestGetLastTrade(t *testing.T) {
 	// Now let's create the trades:
 	trades := []tickerdb.Trade{
 		tickerdb.Trade{
-			HorizonID:       "hrzid2",
+			MillenniumID:       "hrzid2",
 			BaseAssetID:     asset2.ID,
 			CounterAssetID:  asset1.ID,
 			LedgerCloseTime: oneYearBefore,
 		},
 		tickerdb.Trade{
-			HorizonID:       "hrzid1",
+			MillenniumID:       "hrzid1",
 			BaseAssetID:     asset1.ID,
 			CounterAssetID:  asset2.ID,
 			LedgerCloseTime: now,
 		},
 		tickerdb.Trade{
-			HorizonID:       "hrzid2",
+			MillenniumID:       "hrzid2",
 			BaseAssetID:     asset2.ID,
 			CounterAssetID:  asset1.ID,
 			LedgerCloseTime: oneYearBefore,
@@ -259,7 +259,7 @@ func TestDeleteOldTrades(t *testing.T) {
 
 	// Adding a seed asset to be used later:
 	err = session.InsertOrUpdateAsset(&tickerdb.Asset{
-		Code:     "XLM",
+		Code:     "DLO",
 		IssuerID: issuer.ID,
 	}, []string{"code", "issuer_id"})
 	require.NoError(t, err)
@@ -299,25 +299,25 @@ func TestDeleteOldTrades(t *testing.T) {
 	// Now let's create the trades:
 	trades := []tickerdb.Trade{
 		tickerdb.Trade{
-			HorizonID:       "hrzid1",
+			MillenniumID:       "hrzid1",
 			BaseAssetID:     asset1.ID,
 			CounterAssetID:  asset2.ID,
 			LedgerCloseTime: now,
 		},
 		tickerdb.Trade{
-			HorizonID:       "hrzid2",
+			MillenniumID:       "hrzid2",
 			BaseAssetID:     asset2.ID,
 			CounterAssetID:  asset1.ID,
 			LedgerCloseTime: oneDayAgo,
 		},
 		tickerdb.Trade{
-			HorizonID:       "hrzid3",
+			MillenniumID:       "hrzid3",
 			BaseAssetID:     asset2.ID,
 			CounterAssetID:  asset1.ID,
 			LedgerCloseTime: oneMonthAgo,
 		},
 		tickerdb.Trade{
-			HorizonID:       "hrzid4",
+			MillenniumID:       "hrzid4",
 			BaseAssetID:     asset2.ID,
 			CounterAssetID:  asset1.ID,
 			LedgerCloseTime: oneYearAgo,
@@ -338,17 +338,17 @@ func TestDeleteOldTrades(t *testing.T) {
 
 	// Make sure we're actually deleting the entries we wanted:
 	for i, trade := range dbTrades {
-		if trade.HorizonID == "hrzid1" {
+		if trade.MillenniumID == "hrzid1" {
 			trade1 = dbTrades[i]
 		}
 
-		if trade.HorizonID == "hrzid2" {
+		if trade.MillenniumID == "hrzid2" {
 			trade2 = dbTrades[i]
 		}
 	}
 
-	assert.NotEqual(t, trade1.HorizonID, "")
-	assert.NotEqual(t, trade2.HorizonID, "")
+	assert.NotEqual(t, trade1.MillenniumID, "")
+	assert.NotEqual(t, trade2.MillenniumID, "")
 	assert.WithinDuration(t, now.Local(), trade1.LedgerCloseTime.Local(), 10*time.Millisecond)
 	assert.WithinDuration(t, oneDayAgo.Local(), trade2.LedgerCloseTime.Local(), 10*time.Millisecond)
 }

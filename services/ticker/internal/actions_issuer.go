@@ -1,8 +1,8 @@
 package ticker
 
 import (
-	"github.com/stellar/go/services/ticker/internal/scraper"
-	"github.com/stellar/go/services/ticker/internal/tickerdb"
+	"github.com/aiblocks/go/services/ticker/internal/scraper"
+	"github.com/aiblocks/go/services/ticker/internal/tickerdb"
 )
 
 func tomlIssuerToDBIssuer(issuer scraper.TOMLIssuer) tickerdb.Issuer {

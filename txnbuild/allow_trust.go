@@ -3,12 +3,12 @@ package txnbuild
 import (
 	"bytes"
 
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// AllowTrust represents the Stellar allow trust operation. See
-// https://www.stellar.org/developers/guides/concepts/list-of-operations.html
+// AllowTrust represents the AiBlocks allow trust operation. See
+// https://www.aiblocks.io/developers/guides/concepts/list-of-operations.html
 type AllowTrust struct {
 	Trustor                        string
 	Type                           Asset
@@ -29,7 +29,7 @@ func (at *AllowTrust) BuildXDR() (xdr.Operation, error) {
 
 	// Validate this is an issued asset
 	if at.Type.IsNative() {
-		return xdr.Operation{}, errors.New("trustline doesn't exist for a native (XLM) asset")
+		return xdr.Operation{}, errors.New("trustline doesn't exist for a native (DLO) asset")
 	}
 
 	// AllowTrust has a special asset type - map to it
@@ -85,7 +85,7 @@ func (at *AllowTrust) FromXDR(xdrOp xdr.Operation) error {
 // Validate for AllowTrust validates the required struct fields. It returns an error if any of the fields are
 // invalid. Otherwise, it returns nil.
 func (at *AllowTrust) Validate() error {
-	err := validateStellarPublicKey(at.Trustor)
+	err := validateAiBlocksPublicKey(at.Trustor)
 	if err != nil {
 		return NewValidationError("Trustor", err.Error())
 	}

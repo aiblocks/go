@@ -1,19 +1,19 @@
 package txnbuild
 
 import (
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/amount"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// PathPayment represents the Stellar path_payment operation. This operation was removed
-// in Stellar Protocol 12 and replaced by PathPaymentStrictReceive.
+// PathPayment represents the AiBlocks path_payment operation. This operation was removed
+// in AiBlocks Protocol 12 and replaced by PathPaymentStrictReceive.
 // Deprecated: This operation was renamed to PathPaymentStrictReceive,
 // which functions identically.
 type PathPayment = PathPaymentStrictReceive
 
-// PathPaymentStrictReceive represents the Stellar path_payment_strict_receive operation. See
-// https://www.stellar.org/developers/guides/concepts/list-of-operations.html
+// PathPaymentStrictReceive represents the AiBlocks path_payment_strict_receive operation. See
+// https://www.aiblocks.io/developers/guides/concepts/list-of-operations.html
 type PathPaymentStrictReceive struct {
 	SendAsset     Asset
 	SendMax       string
@@ -137,12 +137,12 @@ func (pp *PathPaymentStrictReceive) Validate() error {
 		return NewValidationError("Destination", err.Error())
 	}
 
-	err = validateStellarAsset(pp.SendAsset)
+	err = validateAiBlocksAsset(pp.SendAsset)
 	if err != nil {
 		return NewValidationError("SendAsset", err.Error())
 	}
 
-	err = validateStellarAsset(pp.DestAsset)
+	err = validateAiBlocksAsset(pp.DestAsset)
 	if err != nil {
 		return NewValidationError("DestAsset", err.Error())
 	}

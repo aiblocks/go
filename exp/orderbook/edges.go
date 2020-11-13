@@ -3,7 +3,7 @@ package orderbook
 import (
 	"sort"
 
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/xdr"
 )
 
 // edgeSet maintains a maping of strings to sorted lists of offers.

@@ -2,8 +2,8 @@ package serve
 
 import (
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/stellar/go/exp/services/recoverysigner/internal/account"
-	supportlog "github.com/stellar/go/support/log"
+	"github.com/aiblocks/go/exp/services/recoverysigner/internal/account"
+	supportlog "github.com/aiblocks/go/support/log"
 )
 
 type metricAccountsCount struct {

@@ -2,12 +2,12 @@
 package txnbuild
 
 import (
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// EndSponsoringFutureReserves represents the Stellar begin sponsoring future reserves operation. See
-// https://www.stellar.org/developers/guides/concepts/list-of-operations.html
+// EndSponsoringFutureReserves represents the AiBlocks begin sponsoring future reserves operation. See
+// https://www.aiblocks.io/developers/guides/concepts/list-of-operations.html
 type EndSponsoringFutureReserves struct {
 	SourceAccount Account
 }

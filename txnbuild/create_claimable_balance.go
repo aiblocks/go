@@ -2,13 +2,13 @@
 package txnbuild
 
 import (
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/amount"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// CreateClaimableBalance represents the Stellar create claimable balance operation. See
-// https://www.stellar.org/developers/guides/concepts/list-of-operations.html
+// CreateClaimableBalance represents the AiBlocks create claimable balance operation. See
+// https://www.aiblocks.io/developers/guides/concepts/list-of-operations.html
 type CreateClaimableBalance struct {
 	Amount        string
 	Asset         Asset
@@ -167,7 +167,7 @@ func (cb *CreateClaimableBalance) FromXDR(xdrOp xdr.Operation) error {
 // invalid. Otherwise, it returns nil.
 func (cb *CreateClaimableBalance) Validate() error {
 	for _, d := range cb.Destinations {
-		err := validateStellarPublicKey(d.Destination)
+		err := validateAiBlocksPublicKey(d.Destination)
 		if err != nil {
 			return NewValidationError("Destinations", err.Error())
 		}
@@ -178,7 +178,7 @@ func (cb *CreateClaimableBalance) Validate() error {
 		return NewValidationError("Amount", err.Error())
 	}
 
-	err = validateStellarAsset(cb.Asset)
+	err = validateAiBlocksAsset(cb.Asset)
 	if err != nil {
 		return NewValidationError("Asset", err.Error())
 	}

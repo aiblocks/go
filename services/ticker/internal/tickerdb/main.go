@@ -6,8 +6,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	migrate "github.com/rubenv/sql-migrate"
-	bdata "github.com/stellar/go/services/ticker/internal/tickerdb/migrations"
-	"github.com/stellar/go/support/db"
+	bdata "github.com/aiblocks/go/services/ticker/internal/tickerdb/migrations"
+	"github.com/aiblocks/go/support/db"
 )
 
 //go:generate go-bindata -nometadata -ignore .+\.go$ -pkg bdata -o migrations/bindata.go ./...
@@ -69,7 +69,7 @@ type Issuer struct {
 // Trade represents an entry on the trades table
 type Trade struct {
 	ID              int32     `db:"id"`
-	HorizonID       string    `db:"horizon_id"`
+	MillenniumID       string    `db:"millennium_id"`
 	LedgerCloseTime time.Time `db:"ledger_close_time"`
 	OfferID         string    `db:"offer_id"`
 	BaseOfferID     string    `db:"base_offer_id"`

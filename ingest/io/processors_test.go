@@ -3,7 +3,7 @@ package io
 import (
 	"testing"
 
-	"github.com/stellar/go/support/errors"
+	"github.com/aiblocks/go/support/errors"
 	"github.com/stretchr/testify/assert"
 )
 

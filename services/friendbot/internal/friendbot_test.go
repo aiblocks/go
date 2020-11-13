@@ -4,16 +4,16 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/stellar/go/txnbuild"
+	"github.com/aiblocks/go/txnbuild"
 
-	"github.com/stellar/go/clients/horizonclient"
-	"github.com/stellar/go/keypair"
-	hProtocol "github.com/stellar/go/protocols/horizon"
+	"github.com/aiblocks/go/clients/millenniumclient"
+	"github.com/aiblocks/go/keypair"
+	hProtocol "github.com/aiblocks/go/protocols/millennium"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestFriendbot_Pay(t *testing.T) {
-	mockSubmitTransaction := func(minion *Minion, hclient *horizonclient.Client, tx string) (*hProtocol.Transaction, error) {
+	mockSubmitTransaction := func(minion *Minion, hclient *millenniumclient.Client, tx string) (*hProtocol.Transaction, error) {
 		// Instead of submitting the tx, we emulate a success.
 		txSuccess := hProtocol.Transaction{EnvelopeXdr: tx, Successful: true}
 		return &txSuccess, nil

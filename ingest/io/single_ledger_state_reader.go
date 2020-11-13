@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/stellar/go/historyarchive"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/historyarchive"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
 // readResult is the result of reading a bucket value

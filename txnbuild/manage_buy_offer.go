@@ -1,13 +1,13 @@
 package txnbuild
 
 import (
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/amount"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// ManageBuyOffer represents the Stellar manage buy offer operation. See
-// https://www.stellar.org/developers/guides/concepts/list-of-operations.html
+// ManageBuyOffer represents the AiBlocks manage buy offer operation. See
+// https://www.aiblocks.io/developers/guides/concepts/list-of-operations.html
 type ManageBuyOffer struct {
 	Selling       Asset
 	Buying        Asset

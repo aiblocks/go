@@ -1,10 +1,10 @@
 package txnbuild
 
 import (
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/xdr"
 )
 
-// Operation represents the operation types of the Stellar network.
+// Operation represents the operation types of the AiBlocks network.
 type Operation interface {
 	BuildXDR() (xdr.Operation, error)
 	FromXDR(xdrOp xdr.Operation) error

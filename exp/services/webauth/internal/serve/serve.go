@@ -7,18 +7,18 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stellar/go/clients/horizonclient"
-	"github.com/stellar/go/keypair"
-	"github.com/stellar/go/support/errors"
-	supporthttp "github.com/stellar/go/support/http"
-	supportlog "github.com/stellar/go/support/log"
-	"github.com/stellar/go/support/render/health"
+	"github.com/aiblocks/go/clients/millenniumclient"
+	"github.com/aiblocks/go/keypair"
+	"github.com/aiblocks/go/support/errors"
+	supporthttp "github.com/aiblocks/go/support/http"
+	supportlog "github.com/aiblocks/go/support/log"
+	"github.com/aiblocks/go/support/render/health"
 	"gopkg.in/square/go-jose.v2"
 )
 
 type Options struct {
 	Logger                      *supportlog.Entry
-	HorizonURL                  string
+	MillenniumURL                  string
 	Port                        int
 	NetworkPassphrase           string
 	SigningKeys                 string
@@ -79,15 +79,15 @@ func handler(opts Options) (http.Handler, error) {
 		return nil, errors.New("algorithm (alg) field must be set")
 	}
 
-	horizonTimeout := horizonclient.HorizonTimeout
+	millenniumTimeout := millenniumclient.MillenniumTimeout
 	httpClient := &http.Client{
-		Timeout: horizonTimeout,
+		Timeout: millenniumTimeout,
 	}
-	horizonClient := &horizonclient.Client{
-		HorizonURL: opts.HorizonURL,
+	millenniumClient := &millenniumclient.Client{
+		MillenniumURL: opts.MillenniumURL,
 		HTTP:       httpClient,
 	}
-	horizonClient.SetHorizonTimeout(horizonTimeout)
+	millenniumClient.SetMillenniumTimeout(millenniumTimeout)
 
 	mux := supporthttp.NewAPIMux(opts.Logger)
 
@@ -104,7 +104,7 @@ func handler(opts Options) (http.Handler, error) {
 	}.ServeHTTP)
 	mux.Post("/", tokenHandler{
 		Logger:                      opts.Logger,
-		HorizonClient:               horizonClient,
+		MillenniumClient:               millenniumClient,
 		NetworkPassphrase:           opts.NetworkPassphrase,
 		SigningAddresses:            signingAddresses,
 		JWK:                         jwk,

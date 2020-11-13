@@ -1,6 +1,6 @@
-// Package address provides utility functions for working with stellar
-// addresses. See https://www.stellar.org/developers/guides/concepts/federation.
-// html#stellar-addresses for more on addresses.
+// Package address provides utility functions for working with aiblocks
+// addresses. See https://www.aiblocks.io/developers/guides/concepts/federation.
+// html#aiblocks-addresses for more on addresses.
 package address
 
 import (
@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/stellar/go/support/errors"
+	"github.com/aiblocks/go/support/errors"
 )
 
 // Separator seperates the name and domain portions of an address

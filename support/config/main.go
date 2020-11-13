@@ -8,9 +8,9 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/asaskevich/govalidator"
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/strkey"
-	"github.com/stellar/go/support/errors"
+	"github.com/aiblocks/go/amount"
+	"github.com/aiblocks/go/strkey"
+	"github.com/aiblocks/go/support/errors"
 )
 
 // TLS represents a common configuration snippet for configuring TLS in a server process
@@ -63,13 +63,13 @@ func decode(content string, dest interface{}) error {
 
 func init() {
 	govalidator.SetFieldsRequiredByDefault(true)
-	govalidator.CustomTypeTagMap.Set("stellar_accountid", govalidator.CustomTypeValidator(isStellarAccountID))
-	govalidator.CustomTypeTagMap.Set("stellar_seed", govalidator.CustomTypeValidator(isStellarSeed))
-	govalidator.CustomTypeTagMap.Set("stellar_amount", govalidator.CustomTypeValidator(isStellarAmount))
+	govalidator.CustomTypeTagMap.Set("aiblocks_accountid", govalidator.CustomTypeValidator(isAiBlocksAccountID))
+	govalidator.CustomTypeTagMap.Set("aiblocks_seed", govalidator.CustomTypeValidator(isAiBlocksSeed))
+	govalidator.CustomTypeTagMap.Set("aiblocks_amount", govalidator.CustomTypeValidator(isAiBlocksAmount))
 
 }
 
-func isStellarAmount(i interface{}, context interface{}) bool {
+func isAiBlocksAmount(i interface{}, context interface{}) bool {
 	enc, ok := i.(string)
 
 	if !ok {
@@ -81,7 +81,7 @@ func isStellarAmount(i interface{}, context interface{}) bool {
 	return err == nil
 }
 
-func isStellarAccountID(i interface{}, context interface{}) bool {
+func isAiBlocksAccountID(i interface{}, context interface{}) bool {
 	enc, ok := i.(string)
 
 	if !ok {
@@ -93,7 +93,7 @@ func isStellarAccountID(i interface{}, context interface{}) bool {
 	return err == nil
 }
 
-func isStellarSeed(i interface{}, context interface{}) bool {
+func isAiBlocksSeed(i interface{}, context interface{}) bool {
 	enc, ok := i.(string)
 
 	if !ok {

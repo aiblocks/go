@@ -5,15 +5,15 @@ import (
 	"strings"
 	"time"
 
-	horizonclient "github.com/stellar/go/clients/horizonclient"
-	"github.com/stellar/go/services/ticker/internal/scraper"
-	"github.com/stellar/go/services/ticker/internal/tickerdb"
-	"github.com/stellar/go/services/ticker/internal/utils"
-	hlog "github.com/stellar/go/support/log"
+	millenniumclient "github.com/aiblocks/go/clients/millenniumclient"
+	"github.com/aiblocks/go/services/ticker/internal/scraper"
+	"github.com/aiblocks/go/services/ticker/internal/tickerdb"
+	"github.com/aiblocks/go/services/ticker/internal/utils"
+	hlog "github.com/aiblocks/go/support/log"
 )
 
 // RefreshAssets scrapes the most recent asset list and ingests then into the db.
-func RefreshAssets(s *tickerdb.TickerSession, c *horizonclient.Client, l *hlog.Entry) (err error) {
+func RefreshAssets(s *tickerdb.TickerSession, c *millenniumclient.Client, l *hlog.Entry) (err error) {
 	sc := scraper.ScraperConfig{
 		Client: c,
 		Logger: l,

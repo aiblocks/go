@@ -3,13 +3,13 @@ package serve
 import (
 	"net/http"
 
-	"github.com/stellar/go/exp/services/recoverysigner/internal/account"
-	"github.com/stellar/go/exp/services/recoverysigner/internal/serve/auth"
-	"github.com/stellar/go/keypair"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/support/http/httpdecode"
-	supportlog "github.com/stellar/go/support/log"
-	"github.com/stellar/go/support/render/httpjson"
+	"github.com/aiblocks/go/exp/services/recoverysigner/internal/account"
+	"github.com/aiblocks/go/exp/services/recoverysigner/internal/serve/auth"
+	"github.com/aiblocks/go/keypair"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/support/http/httpdecode"
+	supportlog "github.com/aiblocks/go/support/log"
+	"github.com/aiblocks/go/support/render/httpjson"
 )
 
 type accountPutHandler struct {
@@ -66,7 +66,7 @@ func (am accountPutRequestIdentityAuthMethod) Validate() error {
 	if !account.AuthMethodType(am.Type).Valid() {
 		return errors.Errorf("auth method type %q unrecognized", am.Type)
 	}
-	// TODO: Validate auth method values: Stellar address, phone number and email.
+	// TODO: Validate auth method values: AiBlocks address, phone number and email.
 	return nil
 }
 

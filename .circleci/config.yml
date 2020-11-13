@@ -107,7 +107,7 @@ commands:
               ! egrep -irn -A 1 --include=*.go "Action.+needed.+in.+release:.+$CIRCLE_TAG" ./
             fi
 
-  # install_golang installs golang, it's only used in horizon integration tests,
+  # install_golang installs golang, it's only used in millennium integration tests,
   # other jobs use golang docker image.
   install_golang:
     steps:
@@ -147,20 +147,20 @@ commands:
       - run:
           name: Getting latest checkpoint ledger
           command: |
-            export LATEST_LEDGER=`curl -s http://history.stellar.org/prd/core-live/core_live_001/.well-known/stellar-history.json | jq -r '.currentLedger'`
+            export LATEST_LEDGER=`curl -s http://history.aiblocks.io/prd/core-live/core_live_001/.well-known/aiblocks-history.json | jq -r '.currentLedger'`
             echo $LATEST_LEDGER # For debug
             echo "export LATEST_LEDGER=$LATEST_LEDGER" >> $BASH_ENV # Persist between steps
       - run:
           name: Dump state using ingest
           command: go run -v ./exp/tools/dump-ledger-state/
       - run:
-          name: Init stellar-core DB
-          command: stellar-core --conf ./exp/tools/dump-ledger-state/stellar-core.cfg new-db
+          name: Init aiblocks-core DB
+          command: aiblocks-core --conf ./exp/tools/dump-ledger-state/aiblocks-core.cfg new-db
       - run:
           name: Catchup core
-          command: stellar-core --conf ./exp/tools/dump-ledger-state/stellar-core.cfg catchup $LATEST_LEDGER/1
+          command: aiblocks-core --conf ./exp/tools/dump-ledger-state/aiblocks-core.cfg catchup $LATEST_LEDGER/1
       - run:
-          name: Dump stellar-core DB
+          name: Dump aiblocks-core DB
           command: ./exp/tools/dump-ledger-state/dump_core_db.sh
       - run:
           name: Compare state dumps
@@ -197,13 +197,13 @@ commands:
           name: Build release artifacts
           command: go run ./support/scripts/build_release_artifacts/main.go
 
-  # build_horizon builds horizon binary
-  build_horizon:
+  # build_millennium builds millennium binary
+  build_millennium:
     steps:
       - run:
-          name: Build horizon binary
+          name: Build millennium binary
           command: |
-            go build -v ./services/horizon
+            go build -v ./services/millennium
 
   # send_coverage_report sends coverage report to codecov.io
   send_coverage_report:
@@ -212,8 +212,8 @@ commands:
           name: Send report to codecov.io
           command: bash <(curl -s https://codecov.io/bash)
 
-  # run_horizon_integration_tests runs Horizon's integration tests
-  run_horizon_integration_tests:
+  # run_millennium_integration_tests runs Millennium's integration tests
+  run_millennium_integration_tests:
     parameters:
       enable-captive-core:
         type: boolean
@@ -224,13 +224,13 @@ commands:
           steps:
             - run: docker run -d --env POSTGRES_HOST_AUTH_METHOD=trust -p 5432:5432 circleci/postgres:9.6.5-alpine
       - run:
-          name: Run Horizon integration tests <<# parameters.enable-captive-core >>(With captive core)<</ parameters.enable-captive-core >>
+          name: Run Millennium integration tests <<# parameters.enable-captive-core >>(With captive core)<</ parameters.enable-captive-core >>
           # Currently all integration tests are in a single directory.
           # Pulling the image helps with test running time
           command: |
-            cd ~/go/src/github.com/stellar/go
-            docker pull stellar/quickstart:testing
-            <<# parameters.enable-captive-core >>HORIZON_INTEGRATION_ENABLE_CAPTIVE_CORE=true<</ parameters.enable-captive-core >> go test -timeout 25m -v ./services/horizon/internal/integration/...
+            cd ~/go/src/github.com/aiblocks/go
+            docker pull aiblocks/quickstart:testing
+            <<# parameters.enable-captive-core >>MILLENNIUM_INTEGRATION_ENABLE_CAPTIVE_CORE=true<</ parameters.enable-captive-core >> go test -timeout 25m -v ./services/millennium/internal/integration/...
 
 #-----------------------------------------------------------------------------#
 # Jobs use the commands to accomplish a given task, and run through workflows #
@@ -239,7 +239,7 @@ commands:
 jobs:
   # check_code_1_15 performs code checks using Go 1.15.
   check_code_1_15:
-    working_directory: /go/src/github.com/stellar/go
+    working_directory: /go/src/github.com/aiblocks/go
     docker:
       - image: circleci/golang:1.15
     steps:
@@ -253,7 +253,7 @@ jobs:
 
   # test_code_1_14 performs all package tests using Go 1.14.
   test_code_1_14:
-    working_directory: /go/src/github.com/stellar/go
+    working_directory: /go/src/github.com/aiblocks/go
     docker:
       - image: circleci/golang:1.14-stretch
         environment:
@@ -273,7 +273,7 @@ jobs:
 
   # test_code_1_14_postgres10 performs all package tests using Go 1.14 and Postgres 10.
   test_code_1_14_postgres10:
-    working_directory: /go/src/github.com/stellar/go
+    working_directory: /go/src/github.com/aiblocks/go
     docker:
       - image: circleci/golang:1.14-stretch
         environment:
@@ -294,7 +294,7 @@ jobs:
 
   # test_code_1_15 performs all package tests using Go 1.15.
   test_code_1_15:
-    working_directory: /go/src/github.com/stellar/go
+    working_directory: /go/src/github.com/aiblocks/go
     docker:
       - image: circleci/golang:1.15
         environment:
@@ -314,7 +314,7 @@ jobs:
 
   # test_code_1_15 performs all package tests using Go 1.15 and Postgres 10.
   test_code_1_15_postgres10:
-    working_directory: /go/src/github.com/stellar/go
+    working_directory: /go/src/github.com/aiblocks/go
     docker:
       - image: circleci/golang:1.15
         environment:
@@ -339,7 +339,7 @@ jobs:
   # NOTE: this commands relies on an env var called GITHUB_TOKEN which is a
   # GH OAUTH token with `repo` access.
   publish_artifacts:
-    working_directory: /go/src/github.com/stellar/go
+    working_directory: /go/src/github.com/aiblocks/go
     docker:
       # Artifacts are built on Go 1.14 because a Go 1.15 Docker image for
       # Debian Stretch is currently not available. See
@@ -373,11 +373,11 @@ jobs:
           name: Build and Push Docker image
           command: |
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            docker build --no-cache -f exp/tools/dump-ledger-state/Dockerfile --build-arg GITCOMMIT=$CIRCLE_SHA1 -t stellar/ledger-state-diff:$CIRCLE_SHA1 -t stellar/ledger-state-diff:latest .
-            docker push stellar/ledger-state-diff:$CIRCLE_SHA1
-            docker push stellar/ledger-state-diff:latest
+            docker build --no-cache -f exp/tools/dump-ledger-state/Dockerfile --build-arg GITCOMMIT=$CIRCLE_SHA1 -t aiblocks/ledger-state-diff:$CIRCLE_SHA1 -t aiblocks/ledger-state-diff:latest .
+            docker push aiblocks/ledger-state-diff:$CIRCLE_SHA1
+            docker push aiblocks/ledger-state-diff:latest
 
-  publish_horizon_docker_image:
+  publish_millennium_docker_image:
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
@@ -387,13 +387,13 @@ jobs:
           name: Build and Push Docker image
           command: |
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            # CIRCLE_TAG will be prefixed by "horizon-v", here we build the horizon docker image and tag it with stellar/horizon:$VERSION
-            # where version is CIRCLE_TAG without the "horizon-v" prefix
-            VERSION=${CIRCLE_TAG#horizon-v}
-            docker build -f services/horizon/docker/Dockerfile -t stellar/horizon:$VERSION .
-            docker push stellar/horizon:$VERSION
+            # CIRCLE_TAG will be prefixed by "millennium-v", here we build the millennium docker image and tag it with aiblocks/millennium:$VERSION
+            # where version is CIRCLE_TAG without the "millennium-v" prefix
+            VERSION=${CIRCLE_TAG#millennium-v}
+            docker build -f services/millennium/docker/Dockerfile -t aiblocks/millennium:$VERSION .
+            docker push aiblocks/millennium:$VERSION
 
-  publish_latest_horizon_docker_image:
+  publish_latest_millennium_docker_image:
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
@@ -403,13 +403,13 @@ jobs:
           name: Build and Push Docker image
           command: |
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            docker build -f services/horizon/docker/Dockerfile -t stellar/horizon:latest .
-            docker push stellar/horizon:latest
+            docker build -f services/millennium/docker/Dockerfile -t aiblocks/millennium:latest .
+            docker push aiblocks/millennium:latest
 
-  # test_horizon_integration performs Horizon integration tests, it's using
+  # test_millennium_integration performs Millennium integration tests, it's using
   # decicated vm machine to be able to start arbitrary docker containers.
-  test_horizon_integration:
-    working_directory: ~/go/src/github.com/stellar/go
+  test_millennium_integration:
+    working_directory: ~/go/src/github.com/aiblocks/go
     machine:
       image: ubuntu-1604:201903-01
     steps:
@@ -417,16 +417,16 @@ jobs:
       - run:
           name: Setting env variables
           command: |
-            echo "export HORIZON_INTEGRATION_TESTS=true" >> $BASH_ENV
-            echo "export HORIZON_BIN_DIR=~/go/src/github.com/stellar/go" >> $BASH_ENV
+            echo "export MILLENNIUM_INTEGRATION_TESTS=true" >> $BASH_ENV
+            echo "export MILLENNIUM_BIN_DIR=~/go/src/github.com/aiblocks/go" >> $BASH_ENV
       - install_golang
-      - build_horizon
+      - build_millennium
       # run the integration tests ...
       #   ... without captive core
-      - run_horizon_integration_tests
+      - run_millennium_integration_tests
       #   ... and with captive core
       # This isn't working at the moment
-      # - run_horizon_integration_tests:
+      # - run_millennium_integration_tests:
       #     enable-captive-core: true
 #-------------------------------------------------------------------------#
 # Workflows orchestrate jobs and make sure they run in the right sequence #
@@ -443,7 +443,7 @@ workflows:
       - test_code_1_15
       - test_code_1_15_postgres10
       # TODO: remove once integration_tests_nightly is confirmed to be working
-      - test_horizon_integration
+      - test_millennium_integration
       - publish_state_diff_docker_image:
           filters:
               branches:
@@ -458,28 +458,28 @@ workflows:
                 ignore: snapshots
               branches:
                 ignore: /.*/
-      - publish_horizon_docker_image:
+      - publish_millennium_docker_image:
           filters:
               tags:
-                only: /^horizon-v.*/
+                only: /^millennium-v.*/
               branches:
                 ignore: /.*/
       - hold: # <<< A job that will require manual approval in the CircleCI web application.
           filters:
               tags:
-                only: /^horizon-v.*/
+                only: /^millennium-v.*/
               branches:
                 ignore: /.*/
           type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
-          requires: # We only run the "hold" job when publish_horizon_docker_image has succeeded
-           - publish_horizon_docker_image
-      - publish_latest_horizon_docker_image:
+          requires: # We only run the "hold" job when publish_millennium_docker_image has succeeded
+           - publish_millennium_docker_image
+      - publish_latest_millennium_docker_image:
           filters:
               tags:
-                only: /^horizon-v.*/
+                only: /^millennium-v.*/
               branches:
                 ignore: /.*/
-          # Pushing stellar/horizon:latest to docker hub requires manual approval
+          # Pushing aiblocks/millennium:latest to docker hub requires manual approval
           requires:
             - hold
 
@@ -492,6 +492,6 @@ workflows:
             branches:
               only:
                 - master
-                - /release-horizon-/
+                - /release-millennium-/
     jobs:
-      - test_horizon_integration
+      - test_millennium_integration

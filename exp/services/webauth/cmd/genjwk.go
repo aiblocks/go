@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	"github.com/spf13/cobra"
-	"github.com/stellar/go/exp/support/jwtkey"
-	supportlog "github.com/stellar/go/support/log"
+	"github.com/aiblocks/go/exp/support/jwtkey"
+	supportlog "github.com/aiblocks/go/support/log"
 	"gopkg.in/square/go-jose.v2"
 )
 

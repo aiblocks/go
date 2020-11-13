@@ -9,7 +9,7 @@
                 "currency": "USD"
             },
             "sellingAsset": {
-                "code": "XLM",
+                "code": "DLO",
                 "issuerAddress": "native",
                 "type": "AssetTypeNative"
             }

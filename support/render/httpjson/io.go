@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/stellar/go/support/errors"
+	"github.com/aiblocks/go/support/errors"
 )
 
 type contentType int

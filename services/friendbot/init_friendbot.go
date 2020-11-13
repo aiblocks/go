@@ -5,31 +5,31 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/stellar/go/clients/horizonclient"
-	"github.com/stellar/go/keypair"
-	"github.com/stellar/go/services/friendbot/internal"
-	"github.com/stellar/go/strkey"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/txnbuild"
+	"github.com/aiblocks/go/clients/millenniumclient"
+	"github.com/aiblocks/go/keypair"
+	"github.com/aiblocks/go/services/friendbot/internal"
+	"github.com/aiblocks/go/strkey"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/txnbuild"
 )
 
 func initFriendbot(
 	friendbotSecret string,
 	networkPassphrase string,
-	horizonURL string,
+	millenniumURL string,
 	startingBalance string,
 	numMinions int,
 	baseFee int64,
 ) (*internal.Bot, error) {
-	if friendbotSecret == "" || networkPassphrase == "" || horizonURL == "" || startingBalance == "" || numMinions < 0 {
+	if friendbotSecret == "" || networkPassphrase == "" || millenniumURL == "" || startingBalance == "" || numMinions < 0 {
 		return nil, errors.New("invalid input param(s)")
 	}
 
 	// Guarantee that friendbotSecret is a seed, if not blank.
 	strkey.MustDecode(strkey.VersionByteSeed, friendbotSecret)
 
-	hclient := &horizonclient.Client{
-		HorizonURL: horizonURL,
+	hclient := &millenniumclient.Client{
+		MillenniumURL: millenniumURL,
 		HTTP:       http.DefaultClient,
 		AppName:    "friendbot",
 	}
@@ -56,7 +56,7 @@ func initFriendbot(
 	return &internal.Bot{Minions: minions}, nil
 }
 
-func createMinionAccounts(botAccount internal.Account, botKeypair *keypair.Full, networkPassphrase, newAccountBalance, minionBalance string, numMinions int, baseFee int64, hclient *horizonclient.Client) ([]internal.Minion, error) {
+func createMinionAccounts(botAccount internal.Account, botKeypair *keypair.Full, networkPassphrase, newAccountBalance, minionBalance string, numMinions int, baseFee int64, hclient *millenniumclient.Client) ([]internal.Minion, error) {
 	var minions []internal.Minion
 	numRemainingMinions := numMinions
 	minionBatchSize := 100
@@ -86,7 +86,7 @@ func createMinionAccounts(botAccount internal.Account, botKeypair *keypair.Full,
 				Keypair:              minionKeypair,
 				BotAccount:           botAccount,
 				BotKeypair:           botKeypair,
-				Horizon:              hclient,
+				Millennium:              hclient,
 				Network:              networkPassphrase,
 				StartingBalance:      newAccountBalance,
 				SubmitTransaction:    internal.SubmitTransaction,
@@ -128,7 +128,7 @@ func createMinionAccounts(botAccount internal.Account, botKeypair *keypair.Full,
 		if err != nil {
 			log.Println(resp)
 			switch e := err.(type) {
-			case *horizonclient.Error:
+			case *millenniumclient.Error:
 				problemString := fmt.Sprintf("Problem[Type=%s, Title=%s, Status=%d, Detail=%s, Extras=%v]", e.Problem.Type, e.Problem.Title, e.Problem.Status, e.Problem.Detail, e.Problem.Extras)
 				return minions, errors.Wrap(errors.Wrap(e, problemString), "submitting create accounts tx")
 			}

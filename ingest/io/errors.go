@@ -1,7 +1,7 @@
 package io
 
 import (
-	"github.com/stellar/go/support/errors"
+	"github.com/aiblocks/go/support/errors"
 )
 
 var ErrNotFound = errors.New("ledger not found")

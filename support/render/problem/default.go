@@ -4,12 +4,12 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/stellar/go/support/log"
+	"github.com/aiblocks/go/support/log"
 )
 
 // DefaultServiceHost is the default service host used with the default problem
 // instance.
-var DefaultServiceHost = "https://stellar.org/horizon-errors/"
+var DefaultServiceHost = "https://aiblocks.io/millennium-errors/"
 
 // DefaultLogger is the default logger used with the default problem instance.
 var DefaultLogger = log.DefaultLogger
@@ -45,7 +45,7 @@ func UnRegisterErrors() {
 // RegisterHost registers the service host url. It is used to prepend the host
 // url to the error type. If you don't wish to prepend anything to the error
 // type, register host as an empty string.
-// The default service host points to `https://stellar.org/horizon-errors/`.
+// The default service host points to `https://aiblocks.io/millennium-errors/`.
 func RegisterHost(host string) {
 	Default.RegisterHost(host)
 }

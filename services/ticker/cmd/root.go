@@ -6,21 +6,21 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	horizonclient "github.com/stellar/go/clients/horizonclient"
-	hlog "github.com/stellar/go/support/log"
+	millenniumclient "github.com/aiblocks/go/clients/millenniumclient"
+	hlog "github.com/aiblocks/go/support/log"
 )
 
 var DatabaseURL string
-var Client *horizonclient.Client
+var Client *millenniumclient.Client
 var UseTestNet bool
 var Logger = hlog.New()
 
-var defaultDatabaseURL = getEnv("DB_URL", "postgres://localhost:5432/stellarticker01?sslmode=disable")
+var defaultDatabaseURL = getEnv("DB_URL", "postgres://localhost:5432/aiblocksticker01?sslmode=disable")
 
 var rootCmd = &cobra.Command{
 	Use:   "ticker",
-	Short: "Stellar Development Foundation Ticker.",
-	Long:  `A tool to provide Stellar Asset and Market data.`,
+	Short: "AiBlocks Development Foundation Ticker.",
+	Long:  `A tool to provide AiBlocks Asset and Market data.`,
 }
 
 func getEnv(key, fallback string) string {
@@ -44,7 +44,7 @@ func init() {
 		&UseTestNet,
 		"testnet",
 		false,
-		"use the Stellar Test Network, instead of the Stellar Public Network",
+		"use the AiBlocks Test Network, instead of the AiBlocks Public Network",
 	)
 
 	Logger.SetLevel(logrus.DebugLevel)
@@ -52,11 +52,11 @@ func init() {
 
 func initConfig() {
 	if UseTestNet {
-		Logger.Debug("Using Stellar Default Test Network")
-		Client = horizonclient.DefaultTestNetClient
+		Logger.Debug("Using AiBlocks Default Test Network")
+		Client = millenniumclient.DefaultTestNetClient
 	} else {
-		Logger.Debug("Using Stellar Default Public Network")
-		Client = horizonclient.DefaultPublicNetClient
+		Logger.Debug("Using AiBlocks Default Public Network")
+		Client = millenniumclient.DefaultPublicNetClient
 	}
 }
 

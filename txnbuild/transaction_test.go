@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stellar/go/keypair"
-	"github.com/stellar/go/network"
-	"github.com/stellar/go/strkey"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/keypair"
+	"github.com/aiblocks/go/network"
+	"github.com/aiblocks/go/strkey"
+	"github.com/aiblocks/go/xdr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -421,7 +421,7 @@ func TestSetOptionsHomeDomain(t *testing.T) {
 	sourceAccount := NewSimpleAccount(kp0.Address(), int64(40385577484325))
 
 	setOptions := SetOptions{
-		HomeDomain: NewHomeDomain("LovelyLumensLookLuminous.com"),
+		HomeDomain: NewHomeDomain("LovelyDelosLookLuminous.com"),
 	}
 
 	received, err := newSignedTransaction(
@@ -446,7 +446,7 @@ func TestSetOptionsHomeDomainTooLong(t *testing.T) {
 	sourceAccount := NewSimpleAccount(kp0.Address(), int64(40385577484323))
 
 	setOptions := SetOptions{
-		HomeDomain: NewHomeDomain("LovelyLumensLookLuminousLately.com"),
+		HomeDomain: NewHomeDomain("LovelyDelosLookLuminousLately.com"),
 	}
 
 	_, err := NewTransaction(
@@ -560,7 +560,7 @@ func TestChangeTrustNativeAssetNotAllowed(t *testing.T) {
 		},
 	)
 
-	expectedErrMsg := "validation failed for *txnbuild.ChangeTrust operation: Field: Line, Error: native (XLM) asset type is not allowed"
+	expectedErrMsg := "validation failed for *txnbuild.ChangeTrust operation: Field: Line, Error: native (DLO) asset type is not allowed"
 	require.EqualError(t, err, expectedErrMsg, "No trustlines for native assets")
 }
 
@@ -1146,7 +1146,7 @@ func TestPreAuthTransaction(t *testing.T) {
 	expected := "AAAAAgAAAADVvBDmRt0TVd/JK6uXkq9TTYXKOw738gVP+ZihEYuz9AAAAGQAD3dhAAAAAwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAACE4N7avBtJL576CIWTzGCbGPvSlVfMQAOjcYbSsSF2VAAAAAAF9eEAAAAAAAAAAAA="
 	assert.Equal(t, expected, txeFutureB64, "Base 64 XDR should match")
 
-	//encode the txFutureHash as a stellar HashTx signer key.
+	//encode the txFutureHash as a aiblocks HashTx signer key.
 	preAuth, err := strkey.Encode(strkey.VersionByteHashTx, txFutureHash[:])
 	assert.NoError(t, err)
 
@@ -1183,11 +1183,11 @@ func TestPreAuthTransaction(t *testing.T) {
 
 func TestHashXTransaction(t *testing.T) {
 	// 256 bit preimage
-	preimage := "this is a preimage for hashx transactions on the stellar network"
+	preimage := "this is a preimage for hashx transactions on the aiblocks network"
 
 	preimageHash := sha256.Sum256([]byte(preimage))
 
-	//encode preimageHash as a stellar HashX signer key
+	//encode preimageHash as a aiblocks HashX signer key
 	hashx, err := strkey.Encode(strkey.VersionByteHashX, preimageHash[:])
 	assert.NoError(t, err)
 

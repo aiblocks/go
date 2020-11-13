@@ -6,12 +6,12 @@ import (
 
 	"github.com/graph-gophers/graphql-go"
 	"github.com/graph-gophers/graphql-go/relay"
-	"github.com/stellar/go/services/ticker/internal/gql/static"
-	"github.com/stellar/go/services/ticker/internal/tickerdb"
-	hlog "github.com/stellar/go/support/log"
+	"github.com/aiblocks/go/services/ticker/internal/gql/static"
+	"github.com/aiblocks/go/services/ticker/internal/tickerdb"
+	hlog "github.com/aiblocks/go/support/log"
 )
 
-// asset represents a Stellar asset, with some type
+// asset represents a AiBlocks asset, with some type
 // adaptations to match the GraphQL type system
 type asset struct {
 	Code                        string

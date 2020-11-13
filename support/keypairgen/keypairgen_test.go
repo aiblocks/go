@@ -3,9 +3,9 @@ package keypairgen_test
 import (
 	"testing"
 
-	"github.com/stellar/go/keypair"
-	"github.com/stellar/go/support/keypairgen"
-	"github.com/stellar/go/support/keypairgen/keypairgentest"
+	"github.com/aiblocks/go/keypair"
+	"github.com/aiblocks/go/support/keypairgen"
+	"github.com/aiblocks/go/support/keypairgen/keypairgentest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

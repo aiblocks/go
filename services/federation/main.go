@@ -6,13 +6,13 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/spf13/cobra"
-	"github.com/stellar/go/handlers/federation"
-	"github.com/stellar/go/support/app"
-	"github.com/stellar/go/support/config"
-	"github.com/stellar/go/support/db"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/support/http"
-	"github.com/stellar/go/support/log"
+	"github.com/aiblocks/go/handlers/federation"
+	"github.com/aiblocks/go/support/app"
+	"github.com/aiblocks/go/support/config"
+	"github.com/aiblocks/go/support/db"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/support/http"
+	"github.com/aiblocks/go/support/log"
 )
 
 // Config represents the configuration of a federation server
@@ -32,9 +32,9 @@ type Config struct {
 func main() {
 	rootCmd := &cobra.Command{
 		Use:   "federation",
-		Short: "stellar federation server",
+		Short: "aiblocks federation server",
 		Long: `
-The stellar federation server let's you easily integrate the stellar federation
+The aiblocks federation server let's you easily integrate the aiblocks federation
 protocol with your organization.  This is achieved by connecting the
 application to your customer database and providing the appropriate queries in
 the config file.

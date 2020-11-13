@@ -3,10 +3,10 @@ package scraper
 import (
 	"time"
 
-	"github.com/stellar/go/services/ticker/internal/utils"
+	"github.com/aiblocks/go/services/ticker/internal/utils"
 
-	horizonclient "github.com/stellar/go/clients/horizonclient"
-	hProtocol "github.com/stellar/go/protocols/horizon"
+	millenniumclient "github.com/aiblocks/go/clients/millenniumclient"
+	hProtocol "github.com/aiblocks/go/protocols/millennium"
 )
 
 // checkRecords check if a list of records contains entries older than minTime. If it does,
@@ -26,10 +26,10 @@ func (c *ScraperConfig) checkRecords(trades []hProtocol.Trade, minTime time.Time
 	return
 }
 
-// retrieveTrades retrieves trades from the Horizon API for the last timeDelta period.
+// retrieveTrades retrieves trades from the Millennium API for the last timeDelta period.
 // If limit = 0, will fetch all trades within that period.
 func (c *ScraperConfig) retrieveTrades(since time.Time, limit int) (trades []hProtocol.Trade, err error) {
-	r := horizonclient.TradeRequest{Limit: 200, Order: horizonclient.OrderDesc}
+	r := millenniumclient.TradeRequest{Limit: 200, Order: millenniumclient.OrderDesc}
 
 	tradesPage, err := c.Client.Trades(r)
 	if err != nil {
@@ -66,7 +66,7 @@ func (c *ScraperConfig) retrieveTrades(since time.Time, limit int) (trades []hPr
 		err = utils.Retry(5, 5*time.Second, c.Logger, func() error {
 			tradesPage, err = c.Client.Trades(r)
 			if err != nil {
-				c.Logger.Infoln("Horizon rate limit reached!")
+				c.Logger.Infoln("Millennium rate limit reached!")
 			}
 			return err
 		})
@@ -78,14 +78,14 @@ func (c *ScraperConfig) retrieveTrades(since time.Time, limit int) (trades []hPr
 	return
 }
 
-// streamTrades streams trades directly from horizon and calls the handler function
+// streamTrades streams trades directly from millennium and calls the handler function
 // whenever a new trade appears.
-func (c *ScraperConfig) streamTrades(h horizonclient.TradeHandler, cursor string) error {
+func (c *ScraperConfig) streamTrades(h millenniumclient.TradeHandler, cursor string) error {
 	if cursor == "" {
 		cursor = "now"
 	}
 
-	r := horizonclient.TradeRequest{
+	r := millenniumclient.TradeRequest{
 		Limit:  200,
 		Cursor: cursor,
 	}
@@ -96,12 +96,12 @@ func (c *ScraperConfig) streamTrades(h horizonclient.TradeHandler, cursor string
 // addNativeData adds additional fields when one of the assets is native.
 func addNativeData(trade *hProtocol.Trade) {
 	if trade.BaseAssetType == "native" {
-		trade.BaseAssetCode = "XLM"
+		trade.BaseAssetCode = "DLO"
 		trade.BaseAssetIssuer = "native"
 	}
 
 	if trade.CounterAssetType == "native" {
-		trade.CounterAssetCode = "XLM"
+		trade.CounterAssetCode = "DLO"
 		trade.CounterAssetIssuer = "native"
 	}
 }

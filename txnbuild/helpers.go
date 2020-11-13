@@ -2,41 +2,41 @@ package txnbuild
 
 import (
 	"fmt"
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/strkey"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/amount"
+	"github.com/aiblocks/go/strkey"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// validateStellarPublicKey returns an error if a public key is invalid. Otherwise, it returns nil.
+// validateAiBlocksPublicKey returns an error if a public key is invalid. Otherwise, it returns nil.
 // It is a wrapper around the IsValidEd25519PublicKey method of the strkey package.
-func validateStellarPublicKey(publicKey string) error {
+func validateAiBlocksPublicKey(publicKey string) error {
 	if publicKey == "" {
 		return errors.New("public key is undefined")
 	}
 
 	if !strkey.IsValidEd25519PublicKey(publicKey) {
-		return errors.Errorf("%s is not a valid stellar public key", publicKey)
+		return errors.Errorf("%s is not a valid aiblocks public key", publicKey)
 	}
 	return nil
 }
 
-// validateStellarSignerKey returns an error if a signerkey is invalid. Otherwise, it returns nil.
-func validateStellarSignerKey(signerKey string) error {
+// validateAiBlocksSignerKey returns an error if a signerkey is invalid. Otherwise, it returns nil.
+func validateAiBlocksSignerKey(signerKey string) error {
 	if signerKey == "" {
 		return errors.New("signer key is undefined")
 	}
 
 	var xdrKey xdr.SignerKey
 	if err := xdrKey.SetAddress(signerKey); err != nil {
-		return errors.Errorf("%s is not a valid stellar signer key", signerKey)
+		return errors.Errorf("%s is not a valid aiblocks signer key", signerKey)
 	}
 	return nil
 }
 
-// validateStellarAsset checks if the asset supplied is a valid stellar Asset. It returns an error if the asset is
+// validateAiBlocksAsset checks if the asset supplied is a valid aiblocks Asset. It returns an error if the asset is
 // nil, has an invalid asset code or issuer.
-func validateStellarAsset(asset Asset) error {
+func validateAiBlocksAsset(asset Asset) error {
 	if asset == nil {
 		return errors.New("asset is undefined")
 	}
@@ -50,7 +50,7 @@ func validateStellarAsset(asset Asset) error {
 		return err
 	}
 
-	err = validateStellarPublicKey(asset.GetIssuer())
+	err = validateAiBlocksPublicKey(asset.GetIssuer())
 	if err != nil {
 		return errors.Errorf("asset issuer: %s", err.Error())
 	}
@@ -58,26 +58,26 @@ func validateStellarAsset(asset Asset) error {
 	return nil
 }
 
-// validateAmount checks if the provided value is a valid stellar amount, it returns an error if not.
+// validateAmount checks if the provided value is a valid aiblocks amount, it returns an error if not.
 // This is used to validate price and amount fields in structs.
 func validateAmount(n interface{}) error {
-	var stellarAmount int64
+	var aiblocksAmount int64
 	// type switch can be extended to handle other types. Currently, the types for number values in the txnbuild
 	// package are string or int64.
 	switch value := n.(type) {
 	case int64:
-		stellarAmount = value
+		aiblocksAmount = value
 	case string:
 		v, err := amount.ParseInt64(value)
 		if err != nil {
 			return err
 		}
-		stellarAmount = v
+		aiblocksAmount = v
 	default:
 		return errors.Errorf("could not parse expected numeric value %v", n)
 	}
 
-	if stellarAmount < 0 {
+	if aiblocksAmount < 0 {
 		return errors.New("amount can not be negative")
 	}
 	return nil
@@ -85,9 +85,9 @@ func validateAmount(n interface{}) error {
 
 // validateAllowTrustAsset checks if the provided asset is valid for use in AllowTrust operation.
 // It returns an error if the asset is invalid.
-// The asset must be non native (XLM) with a valid asset code.
+// The asset must be non native (DLO) with a valid asset code.
 func validateAllowTrustAsset(asset Asset) error {
-	// Note: we are not using validateStellarAsset() function for AllowTrust operations because it requires the
+	// Note: we are not using validateAiBlocksAsset() function for AllowTrust operations because it requires the
 	//  following :
 	// - asset is non-native
 	// - asset code is valid
@@ -97,7 +97,7 @@ func validateAllowTrustAsset(asset Asset) error {
 	}
 
 	if asset.IsNative() {
-		return errors.New("native (XLM) asset type is not allowed")
+		return errors.New("native (DLO) asset type is not allowed")
 	}
 
 	_, err := asset.GetType()
@@ -109,9 +109,9 @@ func validateAllowTrustAsset(asset Asset) error {
 
 // validateChangeTrustAsset checks if the provided asset is valid for use in ChangeTrust operation.
 // It returns an error if the asset is invalid.
-// The asset must be non native (XLM) with a valid asset code and issuer.
+// The asset must be non native (DLO) with a valid asset code and issuer.
 func validateChangeTrustAsset(asset Asset) error {
-	// Note: we are not using validateStellarAsset() function for ChangeTrust operations because it requires the
+	// Note: we are not using validateAiBlocksAsset() function for ChangeTrust operations because it requires the
 	//  following :
 	// - asset is non-native
 	// - asset code is valid
@@ -121,7 +121,7 @@ func validateChangeTrustAsset(asset Asset) error {
 		return err
 	}
 
-	err = validateStellarPublicKey(asset.GetIssuer())
+	err = validateAiBlocksPublicKey(asset.GetIssuer())
 	if err != nil {
 		return errors.Errorf("asset issuer: %s", err.Error())
 	}
@@ -130,17 +130,17 @@ func validateChangeTrustAsset(asset Asset) error {
 }
 
 // validatePassiveOffer checks if the fields of a CreatePassiveOffer struct are valid.
-// It checks that the buying and selling assets are valid stellar assets, and that amount and price are valid.
+// It checks that the buying and selling assets are valid aiblocks assets, and that amount and price are valid.
 // It returns an error if any field is invalid.
 func validatePassiveOffer(buying, selling Asset, offerAmount, price string) error {
 	// Note: see discussion on how this can be improved:
-	// https://github.com/stellar/go/pull/1707#discussion_r321508440
-	err := validateStellarAsset(buying)
+	// https://github.com/aiblocks/go/pull/1707#discussion_r321508440
+	err := validateAiBlocksAsset(buying)
 	if err != nil {
 		return NewValidationError("Buying", err.Error())
 	}
 
-	err = validateStellarAsset(selling)
+	err = validateAiBlocksAsset(selling)
 	if err != nil {
 		return NewValidationError("Selling", err.Error())
 	}
@@ -159,7 +159,7 @@ func validatePassiveOffer(buying, selling Asset, offerAmount, price string) erro
 }
 
 // validateOffer checks if the fields of ManageBuyOffer or ManageSellOffer struct are valid.
-// It checks that the buying and selling assets are valid stellar assets, and that amount, price and offerID
+// It checks that the buying and selling assets are valid aiblocks assets, and that amount, price and offerID
 // are valid. It returns an error if any field is invalid.
 func validateOffer(buying, selling Asset, offerAmount, price string, offerID int64) error {
 	err := validatePassiveOffer(buying, selling, offerAmount, price)
@@ -194,7 +194,7 @@ func NewValidationError(field, message string) *ValidationError {
 }
 
 // Parses an asset string in canonical form (SEP-11) into an Asset structure.
-// https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0011.md#asset
+// https://github.com/aiblocks/aiblocks-protocol/blob/master/ecosystem/sep-0011.md#asset
 func ParseAssetString(canonical string) (Asset, error) {
 	assets, err := xdr.BuildAssets(canonical)
 	if err != nil {

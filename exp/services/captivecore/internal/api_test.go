@@ -7,9 +7,9 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/stellar/go/ingest/ledgerbackend"
-	"github.com/stellar/go/support/log"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/ingest/ledgerbackend"
+	"github.com/aiblocks/go/support/log"
+	"github.com/aiblocks/go/xdr"
 )
 
 func TestAPITestSuite(t *testing.T) {

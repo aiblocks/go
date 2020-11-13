@@ -14,13 +14,13 @@ import (
 )
 
 const (
-	// StellarAccountPrefix is a prefix for Stellar key pairs derivation.
-	StellarAccountPrefix = "m/44'/148'"
-	// StellarPrimaryAccountPath is a derivation path of the primary account.
-	StellarPrimaryAccountPath = "m/44'/148'/0'"
-	// StellarAccountPathFormat is a path format used for Stellar key pair
+	// AiBlocksAccountPrefix is a prefix for AiBlocks key pairs derivation.
+	AiBlocksAccountPrefix = "m/44'/148'"
+	// AiBlocksPrimaryAccountPath is a derivation path of the primary account.
+	AiBlocksPrimaryAccountPath = "m/44'/148'/0'"
+	// AiBlocksAccountPathFormat is a path format used for AiBlocks key pair
 	// derivation as described in SEP-00XX. Use with `fmt.Sprintf` and `DeriveForPath`.
-	StellarAccountPathFormat = "m/44'/148'/%d'"
+	AiBlocksAccountPathFormat = "m/44'/148'/%d'"
 	// FirstHardenedIndex is the index of the first hardened key.
 	FirstHardenedIndex = uint32(0x80000000)
 	// As in https://github.com/satoshilabs/slips/blob/master/slip-0010.md

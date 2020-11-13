@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/stellar/go/exp/services/webauth/cmd"
-	supportlog "github.com/stellar/go/support/log"
+	"github.com/aiblocks/go/exp/services/webauth/cmd"
+	supportlog "github.com/aiblocks/go/support/log"
 )
 
 func main() {

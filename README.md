@@ -1,26 +1,26 @@
 <div align="center">
-<a href="https://stellar.org"><img alt="Stellar" src="https://github.com/stellar/.github/raw/master/stellar-logo.png" width="558" /></a>
+<a href="https://aiblocks.io"><img alt="AiBlocks" src="https://github.com/aiblocks/.github/raw/master/aiblocks-logo.png" width="558" /></a>
 <br/>
 <strong>Creating equitable access to the global financial system</strong>
-<h1>Stellar Go Monorepo</h1>
+<h1>AiBlocks Go Monorepo</h1>
 </div>
 <p align="center">
-<a href="https://circleci.com/gh/stellar/go"><img alt="Build Status" src="https://circleci.com/gh/stellar/go.svg?style=shield" /></a>
-<a href="https://godoc.org/github.com/stellar/go"><img alt="GoDoc" src="https://godoc.org/github.com/stellar/go?status.svg" /></a>
-<a href="https://goreportcard.com/report/github.com/stellar/go"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/stellar/go" /></a>
+<a href="https://circleci.com/gh/aiblocks/go"><img alt="Build Status" src="https://circleci.com/gh/aiblocks/go.svg?style=shield" /></a>
+<a href="https://godoc.org/github.com/aiblocks/go"><img alt="GoDoc" src="https://godoc.org/github.com/aiblocks/go?status.svg" /></a>
+<a href="https://goreportcard.com/report/github.com/aiblocks/go"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/aiblocks/go" /></a>
 </p>
 
-This repo is the home for all of the public Go code produced by the [Stellar Development Foundation].
+This repo is the home for all of the public Go code produced by the [AiBlocks Development Foundation].
 
-This repo contains various tools and services that you can use and deploy, as well as the SDK you can use to develop applications that integrate with the Stellar network.
+This repo contains various tools and services that you can use and deploy, as well as the SDK you can use to develop applications that integrate with the AiBlocks network.
 
 ## Package Index
 
-* [Horizon Server](services/horizon): Full-featured API server for Stellar network
-* [Go Horizon SDK - horizonclient](clients/horizonclient): Client for Horizon server (queries and transaction submission)
-* [Go Horizon SDK - txnbuild](txnbuild): Construct Stellar transactions and operations
-* [Ticker](services/ticker): An API server that provides statistics about assets and markets on the Stellar network
-* [Keystore](services/keystore): An API server that is used to store and manage encrypted keys for Stellar client applications
+* [Millennium Server](services/millennium): Full-featured API server for AiBlocks network
+* [Go Millennium SDK - millenniumclient](clients/millenniumclient): Client for Millennium server (queries and transaction submission)
+* [Go Millennium SDK - txnbuild](txnbuild): Construct AiBlocks transactions and operations
+* [Ticker](services/ticker): An API server that provides statistics about assets and markets on the AiBlocks network
+* [Keystore](services/keystore): An API server that is used to store and manage encrypted keys for AiBlocks client applications
 * Servers for Anchors & Financial Institutions
   * [Compliance Server](services/compliance): Allows financial institutions to exchange KYC information
   * [Federation Server](services/federation): Allows organizations to provide addresses for users (`jane*examplebank.com`)
@@ -37,10 +37,10 @@ You can choose to checkout this repository into a [GOPATH](https://github.com/go
 
 In addition to the other top-level packages, there are a few special directories that contain specific types of packages:
 
-* **clients** contains packages that provide client packages to the various Stellar services.
+* **clients** contains packages that provide client packages to the various AiBlocks services.
 * **exp** contains experimental packages.  Use at your own risk.
-* **handlers** contains packages that provide pluggable implementors of `http.Handler` that make it easier to incorporate portions of the Stellar protocol into your own http server. 
-* **support** contains packages that are not intended for consumption outside of Stellar's other packages.  Packages that provide common infrastructure for use in our services and tools should go here, such as `db` or `log`. 
+* **handlers** contains packages that provide pluggable implementors of `http.Handler` that make it easier to incorporate portions of the AiBlocks protocol into your own http server. 
+* **support** contains packages that are not intended for consumption outside of AiBlocks's other packages.  Packages that provide common infrastructure for use in our services and tools should go here, such as `db` or `log`. 
 * **support/scripts** contains single-file go programs and bash scripts used to support the development of this repo. 
 * **services** contains packages that compile to applications that are long-running processes (such as API servers).
 * **tools** contains packages that compile to command line applications.
@@ -49,7 +49,7 @@ Each of these directories have their own README file that explain further the na
 
 ### Other packages
 
-In addition to the packages described above, this repository contains various packages related to working with the Stellar network from a go program.  It's recommended that you use [godoc](https://godoc.org/github.com/stellar/go#pkg-subdirectories) to browse the documentation for each.
+In addition to the packages described above, this repository contains various packages related to working with the AiBlocks network from a go program.  It's recommended that you use [godoc](https://godoc.org/github.com/aiblocks/go#pkg-subdirectories) to browse the documentation for each.
 
 
 ## Package source layout
@@ -81,4 +81,4 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for more detai
 
 See [DEVELOPING.md](DEVELOPING.md) for helpful instructions for getting started developing code in this repository.
 
-[Stellar Development Foundation]: https://stellar.org
+[AiBlocks Development Foundation]: https://aiblocks.io

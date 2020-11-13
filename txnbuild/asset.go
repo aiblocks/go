@@ -3,22 +3,22 @@ package txnbuild
 import (
 	"bytes"
 
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// AssetType represents the type of a Stellar asset.
+// AssetType represents the type of a AiBlocks asset.
 type AssetType xdr.AssetType
 
 // AssetTypeNative, AssetTypeCreditAlphanum4, AssetTypeCreditAlphanum12 enumerate the different
-// types of asset on the Stellar network.
+// types of asset on the AiBlocks network.
 const (
 	AssetTypeNative           AssetType = AssetType(xdr.AssetTypeAssetTypeNative)
 	AssetTypeCreditAlphanum4  AssetType = AssetType(xdr.AssetTypeAssetTypeCreditAlphanum4)
 	AssetTypeCreditAlphanum12 AssetType = AssetType(xdr.AssetTypeAssetTypeCreditAlphanum12)
 )
 
-// Asset represents a Stellar asset.
+// Asset represents a AiBlocks asset.
 type Asset interface {
 	GetType() (AssetType, error)
 	IsNative() bool
@@ -27,7 +27,7 @@ type Asset interface {
 	ToXDR() (xdr.Asset, error)
 }
 
-// NativeAsset represents the native XLM asset.
+// NativeAsset represents the native DLO asset.
 type NativeAsset struct{}
 
 // GetType for NativeAsset returns the enum type of the asset.
@@ -35,13 +35,13 @@ func (na NativeAsset) GetType() (AssetType, error) {
 	return AssetTypeNative, nil
 }
 
-// IsNative for NativeAsset returns true (this is an XLM asset).
+// IsNative for NativeAsset returns true (this is an DLO asset).
 func (na NativeAsset) IsNative() bool { return true }
 
-// GetCode for NativeAsset returns an empty string (XLM doesn't have a code).
+// GetCode for NativeAsset returns an empty string (DLO doesn't have a code).
 func (na NativeAsset) GetCode() string { return "" }
 
-// GetIssuer for NativeAsset returns an empty string (XLM doesn't have an issuer).
+// GetIssuer for NativeAsset returns an empty string (DLO doesn't have an issuer).
 func (na NativeAsset) GetIssuer() string { return "" }
 
 // ToXDR for NativeAsset produces a corresponding XDR asset.
@@ -54,7 +54,7 @@ func (na NativeAsset) ToXDR() (xdr.Asset, error) {
 	return xdrAsset, nil
 }
 
-// CreditAsset represents non-XLM assets on the Stellar network.
+// CreditAsset represents non-DLO assets on the AiBlocks network.
 type CreditAsset struct {
 	Code   string
 	Issuer string
@@ -72,7 +72,7 @@ func (ca CreditAsset) GetType() (AssetType, error) {
 	}
 }
 
-// IsNative for CreditAsset returns false (this is not an XLM asset).
+// IsNative for CreditAsset returns false (this is not an DLO asset).
 func (ca CreditAsset) IsNative() bool { return false }
 
 // GetCode for CreditAsset returns the asset code.

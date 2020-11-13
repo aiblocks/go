@@ -1,12 +1,12 @@
 package txnbuild
 
 import (
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// AccountMerge represents the Stellar merge account operation. See
-// https://www.stellar.org/developers/guides/concepts/list-of-operations.html
+// AccountMerge represents the AiBlocks merge account operation. See
+// https://www.aiblocks.io/developers/guides/concepts/list-of-operations.html
 type AccountMerge struct {
 	Destination   string
 	SourceAccount Account

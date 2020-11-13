@@ -4,10 +4,10 @@ import (
 	"go/types"
 
 	"github.com/spf13/cobra"
-	"github.com/stellar/go/exp/services/recoverysigner/internal/serve"
-	"github.com/stellar/go/network"
-	"github.com/stellar/go/support/config"
-	supportlog "github.com/stellar/go/support/log"
+	"github.com/aiblocks/go/exp/services/recoverysigner/internal/serve"
+	"github.com/aiblocks/go/network"
+	"github.com/aiblocks/go/support/config"
+	supportlog "github.com/aiblocks/go/support/log"
 )
 
 type ServeCommand struct {
@@ -45,7 +45,7 @@ func (c *ServeCommand) Command() *cobra.Command {
 		},
 		{
 			Name:        "network-passphrase",
-			Usage:       "Network passphrase of the Stellar network transactions should be signed for",
+			Usage:       "Network passphrase of the AiBlocks network transactions should be signed for",
 			OptType:     types.String,
 			ConfigKey:   &opts.NetworkPassphrase,
 			FlagDefault: network.TestNetworkPassphrase,
@@ -53,7 +53,7 @@ func (c *ServeCommand) Command() *cobra.Command {
 		},
 		{
 			Name:      "signing-key",
-			Usage:     "Stellar signing key(s) used for signing transactions comma separated (first key is preferred signer) (will be deprecated with per-account keys in the future)",
+			Usage:     "AiBlocks signing key(s) used for signing transactions comma separated (first key is preferred signer) (will be deprecated with per-account keys in the future)",
 			OptType:   types.String,
 			ConfigKey: &opts.SigningKeys,
 			Required:  true,

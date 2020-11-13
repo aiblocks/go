@@ -2,10 +2,10 @@ package txnbuild
 
 import (
 	"encoding/base64"
-	"github.com/stellar/go/network"
+	"github.com/aiblocks/go/network"
 	"testing"
 
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/xdr"
 	"github.com/stretchr/testify/assert"
 )
 

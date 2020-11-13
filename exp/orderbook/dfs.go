@@ -1,8 +1,8 @@
 package orderbook
 
 import (
-	"github.com/stellar/go/price"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/price"
+	"github.com/aiblocks/go/xdr"
 )
 
 // Path represents a payment path from a source asset to some destination asset

@@ -3,13 +3,13 @@ package txnbuild
 import (
 	"math"
 
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/amount"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// ChangeTrust represents the Stellar change trust operation. See
-// https://www.stellar.org/developers/guides/concepts/list-of-operations.html.
+// ChangeTrust represents the AiBlocks change trust operation. See
+// https://www.aiblocks.io/developers/guides/concepts/list-of-operations.html.
 // If Limit is omitted, it defaults to txnbuild.MaxTrustlineLimit.
 type ChangeTrust struct {
 	Line          Asset
@@ -32,7 +32,7 @@ func RemoveTrustlineOp(issuedAsset Asset) ChangeTrust {
 // BuildXDR for ChangeTrust returns a fully configured XDR Operation.
 func (ct *ChangeTrust) BuildXDR() (xdr.Operation, error) {
 	if ct.Line.IsNative() {
-		return xdr.Operation{}, errors.New("trustline cannot be extended to a native (XLM) asset")
+		return xdr.Operation{}, errors.New("trustline cannot be extended to a native (DLO) asset")
 	}
 	xdrLine, err := ct.Line.ToXDR()
 	if err != nil {

@@ -3,7 +3,7 @@ package serve
 import (
 	"net/http"
 
-	"github.com/stellar/go/support/render/httpjson"
+	"github.com/aiblocks/go/support/render/httpjson"
 )
 
 var serverError = errorResponse{

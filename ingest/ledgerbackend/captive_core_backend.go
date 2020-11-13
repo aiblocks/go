@@ -8,13 +8,13 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/stellar/go/historyarchive"
-	"github.com/stellar/go/support/log"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/historyarchive"
+	"github.com/aiblocks/go/support/log"
+	"github.com/aiblocks/go/xdr"
 )
 
-// Ensure CaptiveStellarCore implements LedgerBackend
-var _ LedgerBackend = (*CaptiveStellarCore)(nil)
+// Ensure CaptiveAiBlocksCore implements LedgerBackend
+var _ LedgerBackend = (*CaptiveAiBlocksCore)(nil)
 
 const (
 	readAheadBufferSize = 2
@@ -23,7 +23,7 @@ const (
 func roundDownToFirstReplayAfterCheckpointStart(ledger uint32) uint32 {
 	v := (ledger / ledgersPerCheckpoint) * ledgersPerCheckpoint
 	if v == 0 {
-		// Stellar-Core doesn't stream ledger 1
+		// AiBlocks-Core doesn't stream ledger 1
 		return 2
 	}
 	// All other checkpoints start at the next multiple of 64
@@ -35,23 +35,23 @@ type metaResult struct {
 	err error
 }
 
-// CaptiveStellarCore is a ledger backend that starts internal Stellar-Core
+// CaptiveAiBlocksCore is a ledger backend that starts internal AiBlocks-Core
 // subprocess responsible for streaming ledger data. It provides better decoupling
 // than DatabaseBackend but requires some extra init time.
 //
 // It operates in two modes:
-//   * When a BoundedRange is prepared it starts Stellar-Core in catchup mode that
-//     replays ledgers in memory. This is very fast but requires Stellar-Core to
+//   * When a BoundedRange is prepared it starts AiBlocks-Core in catchup mode that
+//     replays ledgers in memory. This is very fast but requires AiBlocks-Core to
 //     keep ledger state in RAM. It requires around 3GB of RAM as of August 2020.
-//   * When a UnboundedRange is prepared it runs Stellar-Core catchup mode to
+//   * When a UnboundedRange is prepared it runs AiBlocks-Core catchup mode to
 //     sync with the first ledger and then runs it in a normal mode. This
 //     requires the configPath to be provided because a database connection is
 //     required and quorum set needs to be selected.
 //
 // The database requirement for UnboundedRange will soon be removed when some
-// changes are implemented in Stellar-Core.
+// changes are implemented in AiBlocks-Core.
 //
-// When running CaptiveStellarCore will create a temporary folder to store
+// When running CaptiveAiBlocksCore will create a temporary folder to store
 // bucket files and other temporary files. The folder is removed when Close is
 // called.
 //
@@ -59,20 +59,20 @@ type metaResult struct {
 // temporary folder.
 //
 // Currently BoundedRange requires a full-trust on history archive. This issue is
-// being fixed in Stellar-Core.
+// being fixed in AiBlocks-Core.
 //
 // While using BoundedRanges is straightforward there are a few gotchas connected
 // to UnboundedRanges:
 //   * PrepareRange takes more time because all ledger entries must be stored on
 //     disk instead of RAM.
 //   * If GetLedger is not called frequently (every 5 sec. on average) the
-//     Stellar-Core process can go out of sync with the network. This happens
-//     because there is no buffering of communication pipe and CaptiveStellarCore
-//     has a very small internal buffer and Stellar-Core will not close the new
+//     AiBlocks-Core process can go out of sync with the network. This happens
+//     because there is no buffering of communication pipe and CaptiveAiBlocksCore
+//     has a very small internal buffer and AiBlocks-Core will not close the new
 //     ledger if it's not read.
 //
-// Requires Stellar-Core v13.2.0+.
-type CaptiveStellarCore struct {
+// Requires AiBlocks-Core v13.2.0+.
+type CaptiveAiBlocksCore struct {
 	executablePath    string
 	configPath        string
 	networkPassphrase string
@@ -87,14 +87,14 @@ type CaptiveStellarCore struct {
 	wait sync.WaitGroup
 
 	// For testing
-	stellarCoreRunnerFactory func(configPath string) (stellarCoreRunnerInterface, error)
+	aiblocksCoreRunnerFactory func(configPath string) (aiblocksCoreRunnerInterface, error)
 
-	stellarCoreRunner stellarCoreRunnerInterface
+	aiblocksCoreRunner aiblocksCoreRunnerInterface
 	cachedMeta        *xdr.LedgerCloseMeta
 
 	// Defines if the blocking mode (off by default) is on or off. In blocking mode,
 	// calling GetLedger blocks until the requested ledger is available. This is useful
-	// for scenarios when Horizon consumes ledgers faster than Stellar-Core produces them
+	// for scenarios when Millennium consumes ledgers faster than AiBlocks-Core produces them
 	// and using `time.Sleep` when ledger is not available can actually slow entire
 	// ingestion process.
 	blocking bool
@@ -111,11 +111,11 @@ type CaptiveStellarCore struct {
 	waitIntervalPrepareRange time.Duration
 }
 
-// NewCaptive returns a new CaptiveStellarCore.
+// NewCaptive returns a new CaptiveAiBlocksCore.
 //
 // All parameters are required, except configPath which is not required when
 // working with BoundedRanges only.
-func NewCaptive(executablePath, configPath, networkPassphrase string, historyURLs []string) (*CaptiveStellarCore, error) {
+func NewCaptive(executablePath, configPath, networkPassphrase string, historyURLs []string) (*CaptiveAiBlocksCore, error) {
 	archive, err := historyarchive.Connect(
 		historyURLs[0],
 		historyarchive.ConnectOptions{
@@ -126,20 +126,20 @@ func NewCaptive(executablePath, configPath, networkPassphrase string, historyURL
 		return nil, errors.Wrap(err, "error connecting to history archive")
 	}
 
-	return &CaptiveStellarCore{
+	return &CaptiveAiBlocksCore{
 		archive:           archive,
 		executablePath:    executablePath,
 		configPath:        configPath,
 		historyURLs:       historyURLs,
 		networkPassphrase: networkPassphrase,
-		stellarCoreRunnerFactory: func(configPath2 string) (stellarCoreRunnerInterface, error) {
-			return newStellarCoreRunner(executablePath, configPath2, networkPassphrase, historyURLs)
+		aiblocksCoreRunnerFactory: func(configPath2 string) (aiblocksCoreRunnerInterface, error) {
+			return newAiBlocksCoreRunner(executablePath, configPath2, networkPassphrase, historyURLs)
 		},
 		waitIntervalPrepareRange: time.Second,
 	}, nil
 }
 
-func (c *CaptiveStellarCore) getLatestCheckpointSequence() (uint32, error) {
+func (c *CaptiveAiBlocksCore) getLatestCheckpointSequence() (uint32, error) {
 	has, err := c.archive.GetRootHAS()
 	if err != nil {
 		return 0, errors.Wrap(err, "error getting root HAS")
@@ -148,7 +148,7 @@ func (c *CaptiveStellarCore) getLatestCheckpointSequence() (uint32, error) {
 	return has.CurrentLedger, nil
 }
 
-func (c *CaptiveStellarCore) openOfflineReplaySubprocess(from, to uint32) error {
+func (c *CaptiveAiBlocksCore) openOfflineReplaySubprocess(from, to uint32) error {
 	err := c.Close()
 	if err != nil {
 		return errors.Wrap(err, "error closing existing session")
@@ -169,16 +169,16 @@ func (c *CaptiveStellarCore) openOfflineReplaySubprocess(from, to uint32) error 
 		to = latestCheckpointSequence
 	}
 
-	if c.stellarCoreRunner == nil {
+	if c.aiblocksCoreRunner == nil {
 		// configPath is empty in an offline mode because it's generated
-		c.stellarCoreRunner, err = c.stellarCoreRunnerFactory("")
+		c.aiblocksCoreRunner, err = c.aiblocksCoreRunnerFactory("")
 		if err != nil {
-			return errors.Wrap(err, "error creating stellar-core runner")
+			return errors.Wrap(err, "error creating aiblocks-core runner")
 		}
 	}
-	err = c.stellarCoreRunner.catchup(from, to)
+	err = c.aiblocksCoreRunner.catchup(from, to)
 	if err != nil {
-		return errors.Wrap(err, "error running stellar-core")
+		return errors.Wrap(err, "error running aiblocks-core")
 	}
 
 	// The next ledger should be the first ledger of the checkpoint containing
@@ -197,7 +197,7 @@ func (c *CaptiveStellarCore) openOfflineReplaySubprocess(from, to uint32) error 
 	return nil
 }
 
-func (c *CaptiveStellarCore) openOnlineReplaySubprocess(from uint32) error {
+func (c *CaptiveAiBlocksCore) openOnlineReplaySubprocess(from uint32) error {
 	// Check if existing session works for this request
 	if c.lastLedger == nil && c.nextLedger != 0 && c.nextLedger <= from {
 		// Use existing session, GetLedger will fast-forward
@@ -217,7 +217,7 @@ func (c *CaptiveStellarCore) openOnlineReplaySubprocess(from uint32) error {
 	// We don't allow starting the online mode starting with more than two
 	// checkpoints from now. Such requests are likely buggy.
 	// We should allow only one checkpoint here but sometimes there are up to a
-	// minute delays when updating root HAS by stellar-core.
+	// minute delays when updating root HAS by aiblocks-core.
 	maxLedger := latestCheckpointSequence + 2*64
 	if from > maxLedger {
 		return errors.Errorf(
@@ -226,13 +226,13 @@ func (c *CaptiveStellarCore) openOnlineReplaySubprocess(from uint32) error {
 		)
 	}
 
-	if c.stellarCoreRunner == nil {
+	if c.aiblocksCoreRunner == nil {
 		if c.configPath == "" {
-			return errors.New("stellar-core config file path cannot be empty in an online mode")
+			return errors.New("aiblocks-core config file path cannot be empty in an online mode")
 		}
-		c.stellarCoreRunner, err = c.stellarCoreRunnerFactory(c.configPath)
+		c.aiblocksCoreRunner, err = c.aiblocksCoreRunnerFactory(c.configPath)
 		if err != nil {
-			return errors.Wrap(err, "error creating stellar-core runner")
+			return errors.Wrap(err, "error creating aiblocks-core runner")
 		}
 	}
 
@@ -241,9 +241,9 @@ func (c *CaptiveStellarCore) openOnlineReplaySubprocess(from uint32) error {
 		return errors.Wrap(err, "error calculating ledger and hash for stelar-core run")
 	}
 
-	err = c.stellarCoreRunner.runFrom(runFrom, ledgerHash)
+	err = c.aiblocksCoreRunner.runFrom(runFrom, ledgerHash)
 	if err != nil {
-		return errors.Wrap(err, "error running stellar-core")
+		return errors.Wrap(err, "error running aiblocks-core")
 	}
 
 	c.nextLedger = nextLedger
@@ -272,10 +272,10 @@ func (c *CaptiveStellarCore) openOnlineReplaySubprocess(from uint32) error {
 	return nil
 }
 
-// runFromParams receives a ledger sequence and calculates the required values to call stellar-core run with --start-ledger and --start-hash
-func (c *CaptiveStellarCore) runFromParams(from uint32) (runFrom uint32, ledgerHash string, nextLedger uint32, err error) {
+// runFromParams receives a ledger sequence and calculates the required values to call aiblocks-core run with --start-ledger and --start-hash
+func (c *CaptiveAiBlocksCore) runFromParams(from uint32) (runFrom uint32, ledgerHash string, nextLedger uint32, err error) {
 	if from == 1 {
-		// Trying to start-from 1 results in an error from Stellar-Core:
+		// Trying to start-from 1 results in an error from AiBlocks-Core:
 		// Target ledger 1 is not newer than last closed ledger 1 - nothing to do
 		// TODO maybe we can fix it by generating 1st ledger meta
 		// like GenesisLedgerStateReader?
@@ -290,8 +290,8 @@ func (c *CaptiveStellarCore) runFromParams(from uint32) (runFrom uint32, ledgerH
 		nextLedger = 2
 		// The line below is to support a special case for streaming ledger 2
 		// that works for all other ledgers <= 63 (fast-forward).
-		// We can't set from=2 because Stellar-Core will not allow starting from 1.
-		// To solve this we start from 3 and exploit the fast that Stellar-Core
+		// We can't set from=2 because AiBlocks-Core will not allow starting from 1.
+		// To solve this we start from 3 and exploit the fast that AiBlocks-Core
 		// will stream data from 2 for the first checkpoint.
 		from = 3
 	} else {
@@ -303,7 +303,7 @@ func (c *CaptiveStellarCore) runFromParams(from uint32) (runFrom uint32, ledgerH
 		// Streaming will start from the previous checkpoint + 1
 		nextLedger = from - 63
 		if nextLedger < 2 {
-			// Stellar-Core always streams from ledger 2 at min.
+			// AiBlocks-Core always streams from ledger 2 at min.
 			nextLedger = 2
 		}
 	}
@@ -320,7 +320,7 @@ func (c *CaptiveStellarCore) runFromParams(from uint32) (runFrom uint32, ledgerH
 
 // sendLedgerMeta reads from the captive core pipe, decodes the ledger metadata
 // and sends it to the metadata buffered channel
-func (c *CaptiveStellarCore) sendLedgerMeta(untilSequence uint32) {
+func (c *CaptiveAiBlocksCore) sendLedgerMeta(untilSequence uint32) {
 	defer c.wait.Done()
 	printBufferOccupation := time.NewTicker(5 * time.Second)
 	defer printBufferOccupation.Stop()
@@ -336,16 +336,16 @@ func (c *CaptiveStellarCore) sendLedgerMeta(untilSequence uint32) {
 		meta, err := c.readLedgerMetaFromPipe()
 		if err != nil {
 			select {
-			case processErr := <-c.stellarCoreRunner.getProcessExitChan():
+			case processErr := <-c.aiblocksCoreRunner.getProcessExitChan():
 				// First, check if this is an error caused by a process exit.
 				c.processExitMutex.Lock()
 				c.processExit = true
 				c.processErr = processErr
 				c.processExitMutex.Unlock()
 				if processErr != nil {
-					err = errors.Wrap(processErr, "stellar-core process exited with an error")
+					err = errors.Wrap(processErr, "aiblocks-core process exited with an error")
 				} else {
-					err = errors.New("stellar-core process exited without an error unexpectedly")
+					err = errors.New("aiblocks-core process exited without an error unexpectedly")
 				}
 			default:
 			}
@@ -372,8 +372,8 @@ func (c *CaptiveStellarCore) sendLedgerMeta(untilSequence uint32) {
 	}
 }
 
-func (c *CaptiveStellarCore) readLedgerMetaFromPipe() (*xdr.LedgerCloseMeta, error) {
-	metaPipe := c.stellarCoreRunner.getMetaPipe()
+func (c *CaptiveAiBlocksCore) readLedgerMetaFromPipe() (*xdr.LedgerCloseMeta, error) {
+	metaPipe := c.aiblocksCoreRunner.getMetaPipe()
 	if metaPipe == nil {
 		return nil, errors.New("missing metadata pipe")
 	}
@@ -390,15 +390,15 @@ func (c *CaptiveStellarCore) readLedgerMetaFromPipe() (*xdr.LedgerCloseMeta, err
 }
 
 // PrepareRange prepares the given range (including from and to) to be loaded.
-// Captive stellar-core backend needs to initalize Stellar-Core state to be
+// Captive aiblocks-core backend needs to initalize AiBlocks-Core state to be
 // able to stream ledgers.
-// Stellar-Core mode depends on the provided ledgerRange:
-//   * For BoundedRange it will start Stellar-Core in catchup mode.
+// AiBlocks-Core mode depends on the provided ledgerRange:
+//   * For BoundedRange it will start AiBlocks-Core in catchup mode.
 //   * For UnboundedRange it will first catchup to starting ledger and then run
-//     it normally (including connecting to the Stellar network).
+//     it normally (including connecting to the AiBlocks network).
 // Please note that using a BoundedRange, currently, requires a full-trust on
-// history archive. This issue is being fixed in Stellar-Core.
-func (c *CaptiveStellarCore) PrepareRange(ledgerRange Range) error {
+// history archive. This issue is being fixed in AiBlocks-Core.
+func (c *CaptiveAiBlocksCore) PrepareRange(ledgerRange Range) error {
 	// Range already prepared
 	if prepared, err := c.IsPrepared(ledgerRange); err != nil {
 		return errors.Wrap(err, "error in IsPrepared")
@@ -416,7 +416,7 @@ func (c *CaptiveStellarCore) PrepareRange(ledgerRange Range) error {
 		return errors.Wrap(err, "opening subprocess")
 	}
 
-	metaPipe := c.stellarCoreRunner.getMetaPipe()
+	metaPipe := c.aiblocksCoreRunner.getMetaPipe()
 	if metaPipe == nil {
 		return errors.New("missing metadata pipe")
 	}
@@ -433,9 +433,9 @@ func (c *CaptiveStellarCore) PrepareRange(ledgerRange Range) error {
 			c.processExitMutex.Lock()
 			if c.processExit {
 				if c.processErr != nil {
-					err = errors.Wrap(c.processErr, "stellar-core process exited with an error")
+					err = errors.Wrap(c.processErr, "aiblocks-core process exited with an error")
 				} else {
-					err = errors.New("stellar-core process exited without an error unexpectedly")
+					err = errors.New("aiblocks-core process exited without an error unexpectedly")
 				}
 			}
 			c.processExitMutex.Unlock()
@@ -451,7 +451,7 @@ func (c *CaptiveStellarCore) PrepareRange(ledgerRange Range) error {
 }
 
 // IsPrepared returns true if a given ledgerRange is prepared.
-func (c *CaptiveStellarCore) IsPrepared(ledgerRange Range) (bool, error) {
+func (c *CaptiveAiBlocksCore) IsPrepared(ledgerRange Range) (bool, error) {
 	if c.nextLedger == 0 {
 		return false, nil
 	}
@@ -474,10 +474,10 @@ func (c *CaptiveStellarCore) IsPrepared(ledgerRange Range) (bool, error) {
 // GetLedger returns true when ledger is found and it's LedgerCloseMeta.
 // Call PrepareRange first to instruct the backend which ledgers to fetch.
 //
-// CaptiveStellarCore requires PrepareRange call first to initialize Stellar-Core.
+// CaptiveAiBlocksCore requires PrepareRange call first to initialize AiBlocks-Core.
 // Requesting a ledger on non-prepared backend will return an error.
 //
-// Because data is streamed from Stellar-Core ledger after ledger user should
+// Because data is streamed from AiBlocks-Core ledger after ledger user should
 // request sequences in a non-decreasing order. If the requested sequence number
 // is less than the last requested sequence number, an error will be returned.
 //
@@ -488,7 +488,7 @@ func (c *CaptiveStellarCore) IsPrepared(ledgerRange Range) (bool, error) {
 //   * UnboundedRange makes GetLedger non-blocking. The method will return with
 //     the first argument equal false.
 // This is done to provide maximum performance when streaming old ledgers.
-func (c *CaptiveStellarCore) GetLedger(sequence uint32) (bool, xdr.LedgerCloseMeta, error) {
+func (c *CaptiveAiBlocksCore) GetLedger(sequence uint32) (bool, xdr.LedgerCloseMeta, error) {
 	if c.cachedMeta != nil && sequence == c.cachedMeta.LedgerSequence() {
 		// GetLedger can be called multiple times using the same sequence, ex. to create
 		// change and transaction readers. If we have this ledger buffered, let's return it.
@@ -555,9 +555,9 @@ loop:
 // Note that for UnboundedRange the returned sequence number is not necessarily
 // the latest sequence closed by the network. It's always the last value available
 // in the backend.
-func (c *CaptiveStellarCore) GetLatestLedgerSequence() (uint32, error) {
+func (c *CaptiveAiBlocksCore) GetLatestLedgerSequence() (uint32, error) {
 	if c.isClosed() {
-		return 0, errors.New("stellar-core must be opened to return latest available sequence")
+		return 0, errors.New("aiblocks-core must be opened to return latest available sequence")
 	}
 
 	if c.lastLedger == nil {
@@ -566,13 +566,13 @@ func (c *CaptiveStellarCore) GetLatestLedgerSequence() (uint32, error) {
 	return *c.lastLedger, nil
 }
 
-func (c *CaptiveStellarCore) isClosed() bool {
+func (c *CaptiveAiBlocksCore) isClosed() bool {
 	return c.nextLedger == 0
 }
 
-// Close closes existing Stellar-Core process, streaming sessions and removes all
+// Close closes existing AiBlocks-Core process, streaming sessions and removes all
 // temporary files.
-func (c *CaptiveStellarCore) Close() error {
+func (c *CaptiveAiBlocksCore) Close() error {
 	c.nextLedger = 0
 	c.lastLedger = nil
 
@@ -585,11 +585,11 @@ func (c *CaptiveStellarCore) Close() error {
 		c.shutdown = nil
 	}
 
-	if c.stellarCoreRunner != nil {
-		err := c.stellarCoreRunner.close()
-		c.stellarCoreRunner = nil
+	if c.aiblocksCoreRunner != nil {
+		err := c.aiblocksCoreRunner.close()
+		c.aiblocksCoreRunner = nil
 		if err != nil {
-			return errors.Wrap(err, "error closing stellar-core subprocess")
+			return errors.Wrap(err, "error closing aiblocks-core subprocess")
 		}
 	}
 

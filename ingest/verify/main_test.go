@@ -5,10 +5,10 @@ import (
 	stdio "io"
 	"testing"
 
-	ingesterrors "github.com/stellar/go/ingest/errors"
-	"github.com/stellar/go/ingest/io"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	ingesterrors "github.com/aiblocks/go/ingest/errors"
+	"github.com/aiblocks/go/ingest/io"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )

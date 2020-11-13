@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/stellar/go/services/ticker/internal/utils"
+	"github.com/aiblocks/go/services/ticker/internal/utils"
 )
 
 // getDBFieldTags returns all "db" tags for a given struct, optionally excluding the "id".
@@ -130,18 +130,18 @@ func generateWhereClauseWithOrs(optVarLists [][]optionalVar) (clause string, arg
 	return
 }
 
-// getBaseAndCounterCodes takes an asset pair name string (e.g: XLM_BTC)
-// and returns the parsed asset codes (e.g.: XLM, BTC). It also reverses
+// getBaseAndCounterCodes takes an asset pair name string (e.g: DLO_BTC)
+// and returns the parsed asset codes (e.g.: DLO, BTC). It also reverses
 // the assets, according to the following rules:
-// 1. XLM is always the base asset
-// 2. If XLM is not in the pair, the assets should be ordered alphabetically
+// 1. DLO is always the base asset
+// 2. If DLO is not in the pair, the assets should be ordered alphabetically
 func getBaseAndCounterCodes(pairName string) (string, string, error) {
 	assets := strings.Split(pairName, "_")
 	if len(assets) != 2 {
 		return "", "", errors.New("invalid asset pair name")
 	}
 
-	if (assets[1] == "XLM") || (assets[0] != "XLM" && assets[0] > assets[1]) {
+	if (assets[1] == "DLO") || (assets[0] != "DLO" && assets[0] > assets[1]) {
 		return assets[1], assets[0], nil
 	}
 
@@ -150,8 +150,8 @@ func getBaseAndCounterCodes(pairName string) (string, string, error) {
 
 // normalizeBaseAndCounter takes the user-provided base and counter asset
 // and issuer, and orders them according to the following rules:
-// 1. XLM is always the base asset
-// 2. If XLM is not in the pair, the assets should be ordered alphabetically
+// 1. DLO is always the base asset
+// 2. If DLO is not in the pair, the assets should be ordered alphabetically
 func orderBaseAndCounter(
 	baseCode *string,
 	baseIssuer *string,
@@ -162,7 +162,7 @@ func orderBaseAndCounter(
 		return baseCode, baseIssuer, counterCode, counterIssuer
 	}
 
-	if (*counterCode == "XLM") || (*baseCode != "XLM" && *baseCode > *counterCode) {
+	if (*counterCode == "DLO") || (*baseCode != "DLO" && *baseCode > *counterCode) {
 		return counterCode, counterIssuer, baseCode, baseIssuer
 	}
 

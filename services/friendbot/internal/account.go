@@ -3,8 +3,8 @@ package internal
 import (
 	"strconv"
 
-	"github.com/stellar/go/clients/horizonclient"
-	"github.com/stellar/go/support/errors"
+	"github.com/aiblocks/go/clients/millenniumclient"
+	"github.com/aiblocks/go/support/errors"
 )
 
 // Account implements the `txnbuild.Account` interface.
@@ -29,9 +29,9 @@ func (a Account) GetSequenceNumber() (int64, error) {
 	return a.Sequence, nil
 }
 
-// RefreshSequenceNumber gets an Account's correct in-memory sequence number from Horizon.
-func (a *Account) RefreshSequenceNumber(hclient *horizonclient.Client) error {
-	accountRequest := horizonclient.AccountRequest{AccountID: a.GetAccountID()}
+// RefreshSequenceNumber gets an Account's correct in-memory sequence number from Millennium.
+func (a *Account) RefreshSequenceNumber(hclient *millenniumclient.Client) error {
+	accountRequest := millenniumclient.AccountRequest{AccountID: a.GetAccountID()}
 	accountDetail, err := hclient.AccountDetail(accountRequest)
 	if err != nil {
 		return errors.Wrap(err, "getting account detail")

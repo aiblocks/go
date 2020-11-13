@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 
-	"github.com/stellar/go/ingest/ledgerbackend"
+	"github.com/aiblocks/go/ingest/ledgerbackend"
 )
 
-// This little app helped testing CaptiveStellarCore.runFromParams on a living
-// Stellar-Core. Adding it to the repo because it can be useful in a future if
-// Stellar-Core behaviour changes again.
+// This little app helped testing CaptiveAiBlocksCore.runFromParams on a living
+// AiBlocks-Core. Adding it to the repo because it can be useful in a future if
+// AiBlocks-Core behaviour changes again.
 // To make it work, run standalone network (RUN_STANDALONE=false to allow outside
 // connections) and update paths below.
 func main() {
@@ -24,8 +24,8 @@ func main() {
 
 func check(ledger uint32) bool {
 	c, err := ledgerbackend.NewCaptive(
-		"stellar-core",
-		"stellar-core-standalone2.cfg",
+		"aiblocks-core",
+		"aiblocks-core-standalone2.cfg",
 		"Standalone Network ; February 2017",
 		[]string{"http://localhost:1570"},
 	)

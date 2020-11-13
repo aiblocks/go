@@ -1,13 +1,13 @@
 package txnbuild
 
 import (
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/amount"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// CreateAccount represents the Stellar create account operation. See
-// https://www.stellar.org/developers/guides/concepts/list-of-operations.html
+// CreateAccount represents the AiBlocks create account operation. See
+// https://www.aiblocks.io/developers/guides/concepts/list-of-operations.html
 type CreateAccount struct {
 	Destination   string
 	Amount        string
@@ -55,7 +55,7 @@ func (ca *CreateAccount) FromXDR(xdrOp xdr.Operation) error {
 // Validate for CreateAccount validates the required struct fields. It returns an error if any of the fields are
 // invalid. Otherwise, it returns nil.
 func (ca *CreateAccount) Validate() error {
-	err := validateStellarPublicKey(ca.Destination)
+	err := validateAiBlocksPublicKey(ca.Destination)
 	if err != nil {
 		return NewValidationError("Destination", err.Error())
 	}

@@ -1,13 +1,13 @@
 # Clients package
 
-Packages here provide client libraries for accessing the ecosystem of Stellar services.
+Packages here provide client libraries for accessing the ecosystem of AiBlocks services.
 
-* `horizonclient` - programmatic client access to Horizon (use in conjunction with [txnbuild](../txnbuild))
-* `stellartoml` - parse Stellar.toml files from the internet
-* `federation` - resolve federation addresses into stellar account IDs, suitable for use within a transaction
-* `horizon` (DEPRECATED) - the original Horizon client, now superceded by `horizonclient`
+* `millenniumclient` - programmatic client access to Millennium (use in conjunction with [txnbuild](../txnbuild))
+* `aiblockstoml` - parse AiBlocks.toml files from the internet
+* `federation` - resolve federation addresses into aiblocks account IDs, suitable for use within a transaction
+* `millennium` (DEPRECATED) - the original Millennium client, now superceded by `millenniumclient`
 
-See [GoDoc](https://godoc.org/github.com/stellar/go/clients) for more details.
+See [GoDoc](https://godoc.org/github.com/aiblocks/go/clients) for more details.
 
 ## For developers: Adding new client packages
 

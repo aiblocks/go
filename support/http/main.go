@@ -1,4 +1,4 @@
-// Package http provides easy access to Stellar's best practices for building
+// Package http provides easy access to AiBlocks's best practices for building
 // http servers.  The primary method to use is `Serve`, which sets up
 // an server that can support http/2 and can gracefully quit after receiving a
 // SIGINT signal.
@@ -11,9 +11,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/stellar/go/support/config"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/support/log"
+	"github.com/aiblocks/go/support/config"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/support/log"
 	"gopkg.in/tylerb/graceful.v1"
 )
 

@@ -4,9 +4,9 @@ import (
 	"context"
 	"io"
 
-	"github.com/stellar/go/historyarchive"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/historyarchive"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
 // HistoryArchiveBackend is using history archives to get ledger data.

@@ -4,34 +4,34 @@ import (
 	"testing"
 	"time"
 
-	hProtocol "github.com/stellar/go/protocols/horizon"
+	hProtocol "github.com/aiblocks/go/protocols/millennium"
 	"github.com/stretchr/testify/assert"
 )
 
 var pts int64 = 1594668800
 var res = 15 * 60 // 15 minutes, in seconds
 
-var xp1 = xlmPrice{
+var xp1 = dloPrice{
 	timestamp: pts,
 	price:     1.00,
 }
 
-var xp2 = xlmPrice{
+var xp2 = dloPrice{
 	timestamp: pts - int64(res),
 	price:     2.00,
 }
 
-var xp3 = xlmPrice{
+var xp3 = dloPrice{
 	timestamp: pts - int64(2*res),
 	price:     3.00,
 }
 
-var xp4 = xlmPrice{
+var xp4 = dloPrice{
 	timestamp: pts - int64(3*res),
 	price:     4.00,
 }
 
-var prices = []xlmPrice{xp1, xp2, xp3, xp4}
+var prices = []dloPrice{xp1, xp2, xp3, xp4}
 
 func TestTotalRecordsBaseVolume(t *testing.T) {
 	res := 15 * 60
@@ -142,7 +142,7 @@ func TestConstructVolumeHistory(t *testing.T) {
 	start := time.Unix(pts-24*60*60, 0)
 	end := time.Unix(pts, 0)
 
-	errPrices := []xlmPrice{}
+	errPrices := []dloPrice{}
 	assetUsdPrice := 10.0
 	volumeHist, err := constructVolumeHistory(tas, errPrices, assetUsdPrice, start, end, res)
 	assert.Error(t, err)

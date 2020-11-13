@@ -7,18 +7,18 @@ import (
 	"strconv"
 	"time"
 
-	horizonclient "github.com/stellar/go/clients/horizonclient"
-	hProtocol "github.com/stellar/go/protocols/horizon"
-	"github.com/stellar/go/services/ticker/internal/scraper"
-	"github.com/stellar/go/services/ticker/internal/tickerdb"
-	hlog "github.com/stellar/go/support/log"
+	millenniumclient "github.com/aiblocks/go/clients/millenniumclient"
+	hProtocol "github.com/aiblocks/go/protocols/millennium"
+	"github.com/aiblocks/go/services/ticker/internal/scraper"
+	"github.com/aiblocks/go/services/ticker/internal/tickerdb"
+	hlog "github.com/aiblocks/go/support/log"
 )
 
-// StreamTrades constantly streams and ingests new trades directly from horizon.
+// StreamTrades constantly streams and ingests new trades directly from millennium.
 func StreamTrades(
 	ctx context.Context,
 	s *tickerdb.TickerSession,
-	c *horizonclient.Client,
+	c *millenniumclient.Client,
 	l *hlog.Entry,
 ) error {
 	sc := scraper.ScraperConfig{
@@ -52,15 +52,15 @@ func StreamTrades(
 		return err
 	}
 
-	cursor := lastTrade.HorizonID
+	cursor := lastTrade.MillenniumID
 	return sc.StreamNewTrades(cursor, handler)
 }
 
-// BackfillTrades ingest the most recent trades (limited to numDays) directly from Horizon
+// BackfillTrades ingest the most recent trades (limited to numDays) directly from Millennium
 // into the database.
 func BackfillTrades(
 	s *tickerdb.TickerSession,
-	c *horizonclient.Client,
+	c *millenniumclient.Client,
 	l *hlog.Entry,
 	numHours int,
 	limit int,
@@ -148,7 +148,7 @@ func hProtocolTradeToDBTrade(
 	fPrice := float64(hpt.Price.N) / float64(hpt.Price.D)
 
 	trade = tickerdb.Trade{
-		HorizonID:       hpt.ID,
+		MillenniumID:       hpt.ID,
 		LedgerCloseTime: hpt.LedgerCloseTime,
 		OfferID:         hpt.OfferID,
 		BaseOfferID:     hpt.BaseOfferID,

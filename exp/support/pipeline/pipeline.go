@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/stellar/go/support/errors"
+	"github.com/aiblocks/go/support/errors"
 )
 
 func New(rootProcessor *PipelineNode) *Pipeline {

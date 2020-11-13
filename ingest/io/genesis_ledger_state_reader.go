@@ -4,9 +4,9 @@ import (
 	"io"
 	"sync"
 
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/keypair"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/amount"
+	"github.com/aiblocks/go/keypair"
+	"github.com/aiblocks/go/xdr"
 )
 
 // GenesisLedgerStateReader is a streaming ledger entries for genesis ledger

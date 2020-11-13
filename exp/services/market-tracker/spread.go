@@ -37,10 +37,10 @@ type FairValue struct {
 func trackSpreads(cfg Config, c trackerClient, watchedTPsPtr *[]prometheusWatchedTP) {
 	watchedTPs := *watchedTPsPtr
 	priceCache := createPriceCache(watchedTPs)
-	req := mustCreateXlmPriceRequest()
+	req := mustCreateDloPriceRequest()
 	go func() {
 		for {
-			xlmPrice, err := getLatestXlmPrice(req)
+			dloPrice, err := getLatestDloPrice(req)
 			if err != nil {
 				fmt.Printf("error while getting latest price: %s", err)
 			}
@@ -58,9 +58,9 @@ func trackSpreads(cfg Config, c trackerClient, watchedTPsPtr *[]prometheusWatche
 
 				watchedTPs[i].Spread.Top.Set(spreadPct)
 
-				// we only compute spreads at various depths for xlm-based pairs,
-				// because our usd prices are in terms of xlm.
-				if wtp.TradePair.SellingAsset.Code != "XLM" {
+				// we only compute spreads at various depths for dlo-based pairs,
+				// because our usd prices are in terms of dlo.
+				if wtp.TradePair.SellingAsset.Code != "DLO" {
 					continue
 				}
 
@@ -81,13 +81,13 @@ func trackSpreads(cfg Config, c trackerClient, watchedTPsPtr *[]prometheusWatche
 					trueAssetUsdPrice = priceCache[currency].price
 				}
 
-				usdBids, err := convertBids(obStats.Bids, xlmPrice, trueAssetUsdPrice)
+				usdBids, err := convertBids(obStats.Bids, dloPrice, trueAssetUsdPrice)
 				if err != nil {
 					fmt.Printf("error while converting bids to USD: %s", err)
 					continue
 				}
 
-				usdAsks, err := convertAsks(obStats.Asks, xlmPrice, trueAssetUsdPrice)
+				usdAsks, err := convertAsks(obStats.Asks, dloPrice, trueAssetUsdPrice)
 				if err != nil {
 					fmt.Printf("error while converting asks to USD: %s", err)
 					continue

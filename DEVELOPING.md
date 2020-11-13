@@ -1,12 +1,12 @@
 # Developing
 
-Welcome to the Stellar Go monorepo. These instructions help launch 🚀 you into making and testing code changes to this repository.
+Welcome to the AiBlocks Go monorepo. These instructions help launch 🚀 you into making and testing code changes to this repository.
 
 For details about what's in this repository and how it is organized read the [README.md](README.md).
 
 If you're aiming to submit a contribution make sure to also read the [contributing guidelines](CONTRIBUTING.md).
 
-If you're making changes to Horizon, look for documentation in its [docs](services/horizon/internal/docs) directory for specific instructions.
+If you're making changes to Millennium, look for documentation in its [docs](services/millennium/internal/docs) directory for specific instructions.
 
 ## Requirements
 To checkout, build, and run most tests these tools are required:
@@ -22,7 +22,7 @@ To run some tests these tools are also required:
 Check the code out anywhere, using a `GOPATH` is not required.
 
 ```
-git clone https://github.com/stellar/go
+git clone https://github.com/aiblocks/go
 ```
 
 ## Installing dependencies
@@ -112,4 +112,4 @@ git checkout <branch>
 golistcmp go.list.master <(go list -m -json all)
 ```
 
-[golistcmp]: https://github.com/stellar/golistcmp
+[golistcmp]: https://github.com/aiblocks/golistcmp

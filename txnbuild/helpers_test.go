@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stellar/go/keypair"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/keypair"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -117,53 +117,53 @@ func convertToV0(tx *Transaction) {
 	tx.envelope.Type = xdr.EnvelopeTypeEnvelopeTypeTxV0
 }
 
-func TestValidateStellarPublicKey(t *testing.T) {
+func TestValidateAiBlocksPublicKey(t *testing.T) {
 	validKey := "GDWZCOEQRODFCH6ISYQPWY67L3ULLWS5ISXYYL5GH43W7YFMTLB65PYM"
-	err := validateStellarPublicKey(validKey)
+	err := validateAiBlocksPublicKey(validKey)
 	assert.NoError(t, err, "public key should be valid")
 
 	invalidKey := "GDWZCOEQRODFCH6ISYQPWY67L3ULLWS5ISXYYL5GH43W7Y"
-	err = validateStellarPublicKey(invalidKey)
-	expectedErrMsg := "GDWZCOEQRODFCH6ISYQPWY67L3ULLWS5ISXYYL5GH43W7Y is not a valid stellar public key"
+	err = validateAiBlocksPublicKey(invalidKey)
+	expectedErrMsg := "GDWZCOEQRODFCH6ISYQPWY67L3ULLWS5ISXYYL5GH43W7Y is not a valid aiblocks public key"
 	require.EqualError(t, err, expectedErrMsg, "public key should be invalid")
 
 	invalidKey = ""
-	err = validateStellarPublicKey(invalidKey)
+	err = validateAiBlocksPublicKey(invalidKey)
 	expectedErrMsg = "public key is undefined"
 	require.EqualError(t, err, expectedErrMsg, "public key should be invalid")
 
 	invalidKey = "SBCVMMCBEDB64TVJZFYJOJAERZC4YVVUOE6SYR2Y76CBTENGUSGWRRVO"
-	err = validateStellarPublicKey(invalidKey)
-	expectedErrMsg = "SBCVMMCBEDB64TVJZFYJOJAERZC4YVVUOE6SYR2Y76CBTENGUSGWRRVO is not a valid stellar public key"
+	err = validateAiBlocksPublicKey(invalidKey)
+	expectedErrMsg = "SBCVMMCBEDB64TVJZFYJOJAERZC4YVVUOE6SYR2Y76CBTENGUSGWRRVO is not a valid aiblocks public key"
 	require.EqualError(t, err, expectedErrMsg, "public key should be invalid")
 }
 
-func TestValidateStellarAssetWithValidAsset(t *testing.T) {
+func TestValidateAiBlocksAssetWithValidAsset(t *testing.T) {
 	nativeAsset := NativeAsset{}
-	err := validateStellarAsset(nativeAsset)
+	err := validateAiBlocksAsset(nativeAsset)
 	assert.NoError(t, err)
 
 	kp0 := newKeypair0()
 	creditAsset := CreditAsset{"XYZ", kp0.Address()}
-	err = validateStellarAsset(creditAsset)
+	err = validateAiBlocksAsset(creditAsset)
 	assert.NoError(t, err)
 }
 
-func TestValidateStellarAssetWithInValidAsset(t *testing.T) {
-	err := validateStellarAsset(nil)
+func TestValidateAiBlocksAssetWithInValidAsset(t *testing.T) {
+	err := validateAiBlocksAsset(nil)
 	assert.Error(t, err)
 	expectedErrMsg := "asset is undefined"
 	require.EqualError(t, err, expectedErrMsg, "An asset is required")
 
 	kp0 := newKeypair0()
 	creditAssetNoCode := CreditAsset{Code: "", Issuer: kp0.Address()}
-	err = validateStellarAsset(creditAssetNoCode)
+	err = validateAiBlocksAsset(creditAssetNoCode)
 	assert.Error(t, err)
 	expectedErrMsg = "asset code length must be between 1 and 12 characters"
 	require.EqualError(t, err, expectedErrMsg, "An asset code is required")
 
 	creditAssetNoIssuer := CreditAsset{Code: "ABC", Issuer: ""}
-	err = validateStellarAsset(creditAssetNoIssuer)
+	err = validateAiBlocksAsset(creditAssetNoIssuer)
 	assert.Error(t, err)
 	expectedErrMsg = "asset issuer: public key is undefined"
 	require.EqualError(t, err, expectedErrMsg, "An asset issuer is required")
@@ -187,22 +187,22 @@ func TestValidateAmountInvalidValue(t *testing.T) {
 	err := validateAmount(int64(-10))
 	assert.Error(t, err)
 	expectedErrMsg := "amount can not be negative"
-	require.EqualError(t, err, expectedErrMsg, "should be a valid stellar amount")
+	require.EqualError(t, err, expectedErrMsg, "should be a valid aiblocks amount")
 
 	err = validateAmount("-10")
 	assert.Error(t, err)
 	expectedErrMsg = "amount can not be negative"
-	require.EqualError(t, err, expectedErrMsg, "should be a valid stellar amount")
+	require.EqualError(t, err, expectedErrMsg, "should be a valid aiblocks amount")
 
 	err = validateAmount(10)
 	assert.Error(t, err)
 	expectedErrMsg = "could not parse expected numeric value 10"
-	require.EqualError(t, err, expectedErrMsg, "should be a valid stellar amount")
+	require.EqualError(t, err, expectedErrMsg, "should be a valid aiblocks amount")
 
 	err = validateAmount("abc")
 	assert.Error(t, err)
 	expectedErrMsg = "invalid amount format: abc"
-	require.EqualError(t, err, expectedErrMsg, "should be a valid stellar amount")
+	require.EqualError(t, err, expectedErrMsg, "should be a valid aiblocks amount")
 }
 
 func TestValidateAllowTrustAsset(t *testing.T) {
@@ -213,7 +213,7 @@ func TestValidateAllowTrustAsset(t *testing.T) {
 
 	err = validateAllowTrustAsset(NativeAsset{})
 	assert.Error(t, err)
-	expectedErrMsg = "native (XLM) asset type is not allowed"
+	expectedErrMsg = "native (DLO) asset type is not allowed"
 	require.EqualError(t, err, expectedErrMsg, "An asset is required")
 
 	// allow trust asset does not require asset issuer
@@ -230,7 +230,7 @@ func TestValidateChangeTrustAsset(t *testing.T) {
 
 	err = validateChangeTrustAsset(NativeAsset{})
 	assert.Error(t, err)
-	expectedErrMsg = "native (XLM) asset type is not allowed"
+	expectedErrMsg = "native (DLO) asset type is not allowed"
 	require.EqualError(t, err, expectedErrMsg, "A custom asset is required")
 
 	kp0 := newKeypair0()

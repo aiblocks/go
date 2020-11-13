@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-useradd --uid 10011001 --home-dir /home/stellar --no-log-init stellar \
-    && mkdir -p /home/stellar \
-    && chown -R stellar:stellar /home/stellar
+useradd --uid 10011001 --home-dir /home/aiblocks --no-log-init aiblocks \
+    && mkdir -p /home/aiblocks \
+    && chown -R aiblocks:aiblocks /home/aiblocks
 
-mkdir -p /opt/stellar/bin
-mkdir -p /opt/stellar/www
-chown -R stellar:stellar /opt/stellar/www
-mkdir -p /opt/stellar/postgresql/data
+mkdir -p /opt/aiblocks/bin
+mkdir -p /opt/aiblocks/www
+chown -R aiblocks:aiblocks /opt/aiblocks/www
+mkdir -p /opt/aiblocks/postgresql/data

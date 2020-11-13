@@ -2,14 +2,14 @@
 
 Package ingest provides primitives for building custom ingestion engines.
 
-Very often developers need features that are outside of Horizon's scope. While it
+Very often developers need features that are outside of Millennium's scope. While it
 provides APIs for building the  most common apps, it's not possible to add all
 possible features. This is why this package was created.
 
 Ledger Backend
 
-Ledger backends are sources of information about Stellar network ledgers. This
-can be either Stellar-Core DB, Captive Stellar-Core or History Archives.
+Ledger backends are sources of information about AiBlocks network ledgers. This
+can be either AiBlocks-Core DB, Captive AiBlocks-Core or History Archives.
 Please consult the ledgerbackend package docs for more information about each
 backend.
 

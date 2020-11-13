@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/stellar/go/protocols/horizon"
-	"github.com/stellar/go/strkey"
-	"github.com/stellar/go/support/render/hal"
-	"github.com/stellar/go/support/render/problem"
+	"github.com/aiblocks/go/protocols/millennium"
+	"github.com/aiblocks/go/strkey"
+	"github.com/aiblocks/go/support/render/hal"
+	"github.com/aiblocks/go/support/render/problem"
 )
 
 // FriendbotHandler causes an account at `Address` to be created.
@@ -31,7 +31,7 @@ func (handler *FriendbotHandler) Handle(w http.ResponseWriter, r *http.Request) 
 }
 
 // doHandle is just a convenience method that returns the object to be rendered
-func (handler *FriendbotHandler) doHandle(r *http.Request) (*horizon.Transaction, error) {
+func (handler *FriendbotHandler) doHandle(r *http.Request) (*millennium.Transaction, error) {
 	err := handler.checkEnabled()
 	if err != nil {
 		return nil, err

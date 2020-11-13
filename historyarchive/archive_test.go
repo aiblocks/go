@@ -1,4 +1,4 @@
-// Copyright 2016 Stellar Development Foundation and contributors. Licensed
+// Copyright 2016 AiBlocks Development Foundation and contributors. Licensed
 // under the Apache License, Version 2.0. See the COPYING file at the root
 // of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -16,7 +16,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/xdr"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,7 +26,7 @@ func GetTestS3Archive() *Archive {
 	if e != nil {
 		panic(e)
 	}
-	bucket := fmt.Sprintf("s3://history-stg.stellar.org/dev/archivist/test-%s", r)
+	bucket := fmt.Sprintf("s3://history-stg.aiblocks.io/dev/archivist/test-%s", r)
 	region := "eu-west-1"
 	if env_bucket := os.Getenv("ARCHIVIST_TEST_S3_BUCKET"); env_bucket != "" {
 		bucket = fmt.Sprintf(env_bucket+"/archivist/test-%s", r)
@@ -302,7 +302,7 @@ func TestNetworkPassphrase(t *testing.T) {
 	"version": 1,
 	"server": "v14.1.0rc2",
 	"currentLedger": 31883135,
-	"networkPassphrase": "Public Global Stellar Network ; September 2015"
+	"networkPassphrase": "Public Global AiBlocks Network ; September 2015"
 }`))
 	}
 
@@ -324,7 +324,7 @@ func TestNetworkPassphrase(t *testing.T) {
 
 	// No network passphrase set in HAS
 	archive = MustConnect("mock://test", ConnectOptions{
-		NetworkPassphrase: "Public Global Stellar Network ; September 2015",
+		NetworkPassphrase: "Public Global AiBlocks Network ; September 2015",
 	})
 	err = archive.backend.PutFile("has.json", makeHASReaderNoNetwork())
 	assert.NoError(t, err)
@@ -333,7 +333,7 @@ func TestNetworkPassphrase(t *testing.T) {
 
 	// Correct network passphrase set in options
 	archive = MustConnect("mock://test", ConnectOptions{
-		NetworkPassphrase: "Public Global Stellar Network ; September 2015",
+		NetworkPassphrase: "Public Global AiBlocks Network ; September 2015",
 	})
 	err = archive.backend.PutFile("has.json", makeHASReader())
 	assert.NoError(t, err)
@@ -347,7 +347,7 @@ func TestNetworkPassphrase(t *testing.T) {
 	err = archive.backend.PutFile("has.json", makeHASReader())
 	assert.NoError(t, err)
 	_, err = archive.GetPathHAS("has.json")
-	assert.EqualError(t, err, "Network passphrase does not match! expected=Test SDF Network ; September 2015 actual=Public Global Stellar Network ; September 2015")
+	assert.EqualError(t, err, "Network passphrase does not match! expected=Test SDF Network ; September 2015 actual=Public Global AiBlocks Network ; September 2015")
 }
 
 func TestXdrDecode(t *testing.T) {

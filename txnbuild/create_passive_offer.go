@@ -1,13 +1,13 @@
 package txnbuild
 
 import (
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/amount"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// CreatePassiveSellOffer represents the Stellar create passive offer operation. See
-// https://www.stellar.org/developers/guides/concepts/list-of-operations.html
+// CreatePassiveSellOffer represents the AiBlocks create passive offer operation. See
+// https://www.aiblocks.io/developers/guides/concepts/list-of-operations.html
 type CreatePassiveSellOffer struct {
 	Selling       Asset
 	Buying        Asset

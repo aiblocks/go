@@ -1,7 +1,7 @@
 -- +migrate Up
 
 CREATE TYPE auth_method_type AS ENUM (
-  'stellar_address',
+  'aiblocks_address',
   'phone_number',
   'email'
 );

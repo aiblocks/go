@@ -3,8 +3,8 @@ package adapters
 import (
 	"context"
 
-	"github.com/stellar/go/ingest/io"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/ingest/io"
+	"github.com/aiblocks/go/xdr"
 	"github.com/stretchr/testify/mock"
 )
 

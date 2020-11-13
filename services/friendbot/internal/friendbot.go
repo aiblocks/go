@@ -4,7 +4,7 @@ import (
 	"log"
 	"sync"
 
-	hProtocol "github.com/stellar/go/protocols/horizon"
+	hProtocol "github.com/aiblocks/go/protocols/millennium"
 )
 
 // Bot represents the friendbot subsystem and primarily delegates work

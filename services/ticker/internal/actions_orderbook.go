@@ -3,16 +3,16 @@ package ticker
 import (
 	"time"
 
-	horizonclient "github.com/stellar/go/clients/horizonclient"
-	"github.com/stellar/go/services/ticker/internal/scraper"
-	"github.com/stellar/go/services/ticker/internal/tickerdb"
-	"github.com/stellar/go/support/errors"
-	hlog "github.com/stellar/go/support/log"
+	millenniumclient "github.com/aiblocks/go/clients/millenniumclient"
+	"github.com/aiblocks/go/services/ticker/internal/scraper"
+	"github.com/aiblocks/go/services/ticker/internal/tickerdb"
+	"github.com/aiblocks/go/support/errors"
+	hlog "github.com/aiblocks/go/support/log"
 )
 
 // RefreshOrderbookEntries updates the orderbook entries for the relevant markets that were active
 // in the past 7-day interval
-func RefreshOrderbookEntries(s *tickerdb.TickerSession, c *horizonclient.Client, l *hlog.Entry) error {
+func RefreshOrderbookEntries(s *tickerdb.TickerSession, c *millenniumclient.Client, l *hlog.Entry) error {
 	sc := scraper.ScraperConfig{
 		Client: c,
 		Logger: l,

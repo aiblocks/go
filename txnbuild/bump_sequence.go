@@ -1,12 +1,12 @@
 package txnbuild
 
 import (
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/xdr"
 )
 
-// BumpSequence represents the Stellar bump sequence operation. See
-// https://www.stellar.org/developers/guides/concepts/list-of-operations.html
+// BumpSequence represents the AiBlocks bump sequence operation. See
+// https://www.aiblocks.io/developers/guides/concepts/list-of-operations.html
 type BumpSequence struct {
 	BumpTo        int64
 	SourceAccount Account

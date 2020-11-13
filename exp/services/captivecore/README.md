@@ -1,21 +1,21 @@
 # captivecore
 
-The Captive Stellar-Core Server allows you to run a dedicated Stellar-Core instance
-for the purpose of ingestion. The server must be bundled with a Stellar Core binary.
+The Captive AiBlocks-Core Server allows you to run a dedicated AiBlocks-Core instance
+for the purpose of ingestion. The server must be bundled with a AiBlocks Core binary.
 
-If you run Horizon with Captive Stellar-Core ingestion enabled Horizon will spawn a Stellar-Core
-subprocess. Horizon's ingestion system will then stream ledgers from the subprocess via
-a filesystem pipe. The disadvantage of running both Horizon and the Stellar-Core subprocess
+If you run Millennium with Captive AiBlocks-Core ingestion enabled Millennium will spawn a AiBlocks-Core
+subprocess. Millennium's ingestion system will then stream ledgers from the subprocess via
+a filesystem pipe. The disadvantage of running both Millennium and the AiBlocks-Core subprocess
 on the same machine is it requires detailed per-process monitoring to be able to attribute
 potential issues (like memory leaks) to a specific service.
 
-Now you can run Horizon and pair it with a remote Captive Stellar-Core instance. The
-Captive Stellar-Core Server can run on a separate machine from Horizon. The server
-will manage Stellar-Core as a subprocess and provide an HTTP API which Horizon
+Now you can run Millennium and pair it with a remote Captive AiBlocks-Core instance. The
+Captive AiBlocks-Core Server can run on a separate machine from Millennium. The server
+will manage AiBlocks-Core as a subprocess and provide an HTTP API which Millennium
 can use remotely to stream ledgers for the purpose of ingestion.
 
-Note that, currently, a single Captive Stellar-Core Server cannot be shared by
-multiple Horizon instances.
+Note that, currently, a single Captive AiBlocks-Core Server cannot be shared by
+multiple Millennium instances.
 
 ## API
 
@@ -81,16 +81,16 @@ Response:
 
 ```
 $ captivecore --help
-Run the Captive Stellar-Core Server
+Run the Captive AiBlocks-Core Server
 
 Usage:
   captivecore [flags]
 
 Flags:
-      --stellar-core-binary-path           Path to stellar core binary
-      --stellar-core-config-path           Path to stellar core config file
-      --history-archive-urls               Comma-separated list of stellar history archives to connect with
+      --aiblocks-core-binary-path           Path to aiblocks core binary
+      --aiblocks-core-config-path           Path to aiblocks core config file
+      --history-archive-urls               Comma-separated list of aiblocks history archives to connect with
       --log-level                          Minimum log severity (debug, info, warn, error) to log (default info)
-      --network-passphrase string          Network passphrase of the Stellar network transactions should be signed for (NETWORK_PASSPHRASE) (default "Test SDF Network ; September 2015")
+      --network-passphrase string          Network passphrase of the AiBlocks network transactions should be signed for (NETWORK_PASSPHRASE) (default "Test SDF Network ; September 2015")
       --port int                           Port to listen and serve on (PORT) (default 8000)
 ```

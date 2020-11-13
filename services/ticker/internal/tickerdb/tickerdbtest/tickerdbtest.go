@@ -6,8 +6,8 @@ import (
 	"time"
 
 	migrate "github.com/rubenv/sql-migrate"
-	"github.com/stellar/go/services/ticker/internal/tickerdb"
-	"github.com/stellar/go/support/db/dbtest"
+	"github.com/aiblocks/go/services/ticker/internal/tickerdb"
+	"github.com/aiblocks/go/support/db/dbtest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -130,7 +130,7 @@ func SetupTickerTestSession(t *testing.T, migrationsDir string) (session tickerd
 	// Now let's create the trades:
 	trades := []tickerdb.Trade{
 		tickerdb.Trade{ // BTC_ETH  trade (ETH is from issuer 1)
-			HorizonID:       "hrzid1",
+			MillenniumID:       "hrzid1",
 			BaseAssetID:     btcAsset.ID,
 			BaseAmount:      100.0,
 			CounterAssetID:  ethAsset1.ID,
@@ -139,7 +139,7 @@ func SetupTickerTestSession(t *testing.T, migrationsDir string) (session tickerd
 			LedgerCloseTime: tenMinutesAgo,
 		},
 		tickerdb.Trade{ // BTC_ETH trade (ETH is from issuer 2)
-			HorizonID:       "hrzid3",
+			MillenniumID:       "hrzid3",
 			BaseAssetID:     btcAsset.ID,
 			BaseAmount:      24.0,
 			CounterAssetID:  ethAsset2.ID,
@@ -148,7 +148,7 @@ func SetupTickerTestSession(t *testing.T, migrationsDir string) (session tickerd
 			LedgerCloseTime: now,
 		},
 		tickerdb.Trade{ // BTC_ETH  trade (ETH is from issuer 1)
-			HorizonID:       "hrzid2",
+			MillenniumID:       "hrzid2",
 			BaseAssetID:     btcAsset.ID,
 			BaseAmount:      50.0,
 			CounterAssetID:  ethAsset1.ID,
@@ -157,7 +157,7 @@ func SetupTickerTestSession(t *testing.T, migrationsDir string) (session tickerd
 			LedgerCloseTime: oneHourAgo,
 		},
 		tickerdb.Trade{ // BTC_ETH  trade (ETH is from issuer 1)
-			HorizonID:       "hrzid4",
+			MillenniumID:       "hrzid4",
 			BaseAssetID:     btcAsset.ID,
 			BaseAmount:      50.0,
 			CounterAssetID:  ethAsset1.ID,
@@ -282,31 +282,31 @@ func SetupTickerTestSession(t *testing.T, migrationsDir string) (session tickerd
 	)
 	require.NoError(t, err)
 
-	// Add an XLM asset.
+	// Add an DLO asset.
 	err = session.InsertOrUpdateAsset(&tickerdb.Asset{
-		Code:          "XLM",
+		Code:          "DLO",
 		IssuerAccount: issuer1PK,
 		IssuerID:      issuer1.ID,
 		IsValid:       true,
 	}, []string{"code", "issuer_id"})
 	require.NoError(t, err)
 
-	var xlmAsset tickerdb.Asset
-	err = session.GetRaw(&xlmAsset, `
+	var dloAsset tickerdb.Asset
+	err = session.GetRaw(&dloAsset, `
 		SELECT *
 		FROM assets
 		WHERE code = ?
 		AND issuer_account = ?`,
-		"XLM",
+		"DLO",
 		issuer1PK,
 	)
 	require.NoError(t, err)
 
-	// Add XLM/BTC trades.
+	// Add DLO/BTC trades.
 	trades = []tickerdb.Trade{
 		tickerdb.Trade{
-			HorizonID:       "hrzid5",
-			BaseAssetID:     xlmAsset.ID,
+			MillenniumID:       "hrzid5",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      10.0,
 			CounterAssetID:  btcAsset.ID,
 			CounterAmount:   10.0,
@@ -314,8 +314,8 @@ func SetupTickerTestSession(t *testing.T, migrationsDir string) (session tickerd
 			LedgerCloseTime: tenMinutesAgo,
 		},
 		tickerdb.Trade{
-			HorizonID:       "hrzid6",
-			BaseAssetID:     xlmAsset.ID,
+			MillenniumID:       "hrzid6",
+			BaseAssetID:     dloAsset.ID,
 			BaseAmount:      10.0,
 			CounterAssetID:  btcAsset.ID,
 			CounterAmount:   10.0,

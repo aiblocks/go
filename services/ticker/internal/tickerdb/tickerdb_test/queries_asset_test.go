@@ -7,8 +7,8 @@ import (
 
 	_ "github.com/lib/pq"
 	migrate "github.com/rubenv/sql-migrate"
-	"github.com/stellar/go/services/ticker/internal/tickerdb"
-	"github.com/stellar/go/support/db/dbtest"
+	"github.com/aiblocks/go/services/ticker/internal/tickerdb"
+	"github.com/aiblocks/go/support/db/dbtest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -33,7 +33,7 @@ func TestInsertOrUpdateAsset(t *testing.T) {
 	publicKey := "GCF3TQXKZJNFJK7HCMNE2O2CUNKCJH2Y2ROISTBPLC7C5EIA5NNG2XZB"
 	issuerAccount := "AM2FQXKZJNFJK7HCMNE2O2CUNKCJH2Y2ROISTBPLC7C5EIA5NNG2XZB"
 	name := "FOO BAR"
-	code := "XLM"
+	code := "DLO"
 
 	// Adding a seed issuer to be used later:
 	issuer := tickerdb.Issuer{
@@ -176,7 +176,7 @@ func TestGetAssetByCodeAndIssuerAccount(t *testing.T) {
 
 	publicKey := "GCF3TQXKZJNFJK7HCMNE2O2CUNKCJH2Y2ROISTBPLC7C5EIA5NNG2XZB"
 	name := "FOO BAR"
-	code := "XLM"
+	code := "DLO"
 	issuerAccount := "AM2FQXKZJNFJK7HCMNE2O2CUNKCJH2Y2ROISTBPLC7C5EIA5NNG2XZB"
 
 	// Adding a seed issuer to be used later:

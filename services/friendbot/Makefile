@@ -2,7 +2,7 @@
 SUDO := $(shell docker version >/dev/null 2>&1 || echo "sudo")
 
 # If TAG is not provided set default value
-TAG ?= stellar/friendbot:$(shell git rev-parse --short HEAD)$(and $(shell git status -s),-dirty-$(shell id -u -n))
+TAG ?= aiblocks/friendbot:$(shell git rev-parse --short HEAD)$(and $(shell git status -s),-dirty-$(shell id -u -n))
 
 docker-build:
 	cd ../../ && \

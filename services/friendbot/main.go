@@ -8,13 +8,13 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/spf13/cobra"
-	"github.com/stellar/go/services/friendbot/internal"
-	"github.com/stellar/go/support/app"
-	"github.com/stellar/go/support/config"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/support/http"
-	"github.com/stellar/go/support/log"
-	"github.com/stellar/go/support/render/problem"
+	"github.com/aiblocks/go/services/friendbot/internal"
+	"github.com/aiblocks/go/support/app"
+	"github.com/aiblocks/go/support/config"
+	"github.com/aiblocks/go/support/errors"
+	"github.com/aiblocks/go/support/http"
+	"github.com/aiblocks/go/support/log"
+	"github.com/aiblocks/go/support/render/problem"
 )
 
 // Config represents the configuration of a friendbot server
@@ -22,7 +22,7 @@ type Config struct {
 	Port              int         `toml:"port" valid:"required"`
 	FriendbotSecret   string      `toml:"friendbot_secret" valid:"required"`
 	NetworkPassphrase string      `toml:"network_passphrase" valid:"required"`
-	HorizonURL        string      `toml:"horizon_url" valid:"required"`
+	MillenniumURL        string      `toml:"millennium_url" valid:"required"`
 	StartingBalance   string      `toml:"starting_balance" valid:"required"`
 	TLS               *config.TLS `valid:"optional"`
 	NumMinions        int         `toml:"num_minions" valid:"optional"`
@@ -33,8 +33,8 @@ func main() {
 
 	rootCmd := &cobra.Command{
 		Use:   "friendbot",
-		Short: "friendbot for the Stellar Test Network",
-		Long:  "client-facing api server for the friendbot service on the Stellar Test Network",
+		Short: "friendbot for the AiBlocks Test Network",
+		Long:  "client-facing api server for the friendbot service on the AiBlocks Test Network",
 		Run:   run,
 	}
 
@@ -60,7 +60,7 @@ func run(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	fb, err := initFriendbot(cfg.FriendbotSecret, cfg.NetworkPassphrase, cfg.HorizonURL, cfg.StartingBalance, cfg.NumMinions, cfg.BaseFee)
+	fb, err := initFriendbot(cfg.FriendbotSecret, cfg.NetworkPassphrase, cfg.MillenniumURL, cfg.StartingBalance, cfg.NumMinions, cfg.BaseFee)
 	if err != nil {
 		log.Error(err)
 		os.Exit(1)

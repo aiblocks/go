@@ -10,9 +10,9 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/stellar/go/ingest/ledgerbackend"
-	"github.com/stellar/go/support/log"
-	"github.com/stellar/go/xdr"
+	"github.com/aiblocks/go/ingest/ledgerbackend"
+	"github.com/aiblocks/go/support/log"
+	"github.com/aiblocks/go/xdr"
 )
 
 func TestServerTestSuite(t *testing.T) {
@@ -25,7 +25,7 @@ type ServerTestSuite struct {
 	api           CaptiveCoreAPI
 	handler       http.Handler
 	server        *httptest.Server
-	client        ledgerbackend.RemoteCaptiveStellarCore
+	client        ledgerbackend.RemoteCaptiveAiBlocksCore
 }
 
 func (s *ServerTestSuite) SetupTest() {

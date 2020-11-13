@@ -14,15 +14,15 @@ INSERT INTO public.issuers (
     org_twitter
 ) VALUES (
     'native',
-    'Stellar Development Foundation',
-    'http://stellar.org',
+    'AiBlocks Development Foundation',
+    'http://aiblocks.io',
     '',
     '',
     '',
     '',
     '',
     '',
-    'https://twitter.com/stellarorg'
+    'https://twitter.com/aiblocksorg'
 );
 
 INSERT INTO public.assets (
@@ -55,7 +55,7 @@ INSERT INTO public.assets (
     issuer_id,
     issuer_account
 ) VALUES (
-    'XLM',
+    'DLO',
     'native',
     0,
     FALSE,
@@ -69,7 +69,7 @@ INSERT INTO public.assets (
     now(),
     now(),
     7,
-    'Stellar Lumens',
+    'AiBlocks Delos',
     '',
     '',
     FALSE,
@@ -81,7 +81,7 @@ INSERT INTO public.assets (
     '',
     '',
     '',
-    (SELECT id FROM public.issuers WHERE public_key = 'native' AND org_twitter = 'https://twitter.com/stellarorg'),
+    (SELECT id FROM public.issuers WHERE public_key = 'native' AND org_twitter = 'https://twitter.com/aiblocksorg'),
     'native'
 );
 

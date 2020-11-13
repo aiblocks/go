@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	hProtocol "github.com/stellar/go/protocols/horizon"
+	hProtocol "github.com/aiblocks/go/protocols/millennium"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,27 +17,27 @@ var badAmtOrders = []hProtocol.PriceLevel{hProtocol.PriceLevel{
 }}
 
 func TestConvertBids(t *testing.T) {
-	usdXlmPrice := 0.10
+	usdDloPrice := 0.10
 	basePrice := 0.10
-	bids, err := convertBids(badAmtOrders, usdXlmPrice, basePrice)
+	bids, err := convertBids(badAmtOrders, usdDloPrice, basePrice)
 	assert.Error(t, err)
 	assert.Equal(t, 0, len(bids))
 
 	highBid := usdOrder{
-		xlmAmount:  100.0,
+		dloAmount:  100.0,
 		usdAmount:  10.0,
 		baseAmount: 1.0,
 		usdPrice:   0.25,
 	}
 
 	lowBid := usdOrder{
-		xlmAmount:  50.0,
+		dloAmount:  50.0,
 		usdAmount:  5.0,
 		baseAmount: 0.5,
 		usdPrice:   0.2,
 	}
 
-	bids, err = convertBids(hOrders, usdXlmPrice, basePrice)
+	bids, err = convertBids(hOrders, usdDloPrice, basePrice)
 	assert.NoError(t, err)
 	assert.GreaterOrEqual(t, bids[0].usdPrice, bids[1].usdPrice)
 	assert.Equal(t, highBid, bids[0])
@@ -45,28 +45,28 @@ func TestConvertBids(t *testing.T) {
 }
 
 func TestConvertAsks(t *testing.T) {
-	usdXlmPrice := 0.10
+	usdDloPrice := 0.10
 	basePrice := 0.10
-	asks, err := convertAsks(badAmtOrders, usdXlmPrice, basePrice)
+	asks, err := convertAsks(badAmtOrders, usdDloPrice, basePrice)
 	assert.Error(t, err)
 	assert.Equal(t, 0, len(asks))
 
 	lowAsk := usdOrder{
-		xlmAmount:  50,
+		dloAmount:  50,
 		usdPrice:   0.2,
 		usdAmount:  5,
 		baseAmount: 0.5,
 	}
 
 	highAsk := usdOrder{
-		xlmAmount:  100,
+		dloAmount:  100,
 		usdPrice:   0.25,
 		usdAmount:  10,
 		baseAmount: 1,
 	}
 
 	orders := []hProtocol.PriceLevel{hHighOrder, hLowOrder}
-	asks, err = convertAsks(orders, usdXlmPrice, basePrice)
+	asks, err = convertAsks(orders, usdDloPrice, basePrice)
 	assert.NoError(t, err)
 	assert.LessOrEqual(t, asks[0].usdPrice, asks[1].usdPrice)
 	assert.Equal(t, lowAsk, asks[0])

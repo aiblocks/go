@@ -5,19 +5,19 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stellar/go/clients/horizonclient"
-	"github.com/stellar/go/keypair"
-	"github.com/stellar/go/support/http/httpdecode"
-	supportlog "github.com/stellar/go/support/log"
-	"github.com/stellar/go/support/render/httpjson"
-	"github.com/stellar/go/txnbuild"
+	"github.com/aiblocks/go/clients/millenniumclient"
+	"github.com/aiblocks/go/keypair"
+	"github.com/aiblocks/go/support/http/httpdecode"
+	supportlog "github.com/aiblocks/go/support/log"
+	"github.com/aiblocks/go/support/render/httpjson"
+	"github.com/aiblocks/go/txnbuild"
 	"gopkg.in/square/go-jose.v2"
 	"gopkg.in/square/go-jose.v2/jwt"
 )
 
 type tokenHandler struct {
 	Logger                      *supportlog.Entry
-	HorizonClient               horizonclient.ClientInterface
+	MillenniumClient               millenniumclient.ClientInterface
 	NetworkPassphrase           string
 	SigningAddresses            []*keypair.FromAddress
 	JWK                         jose.JSONWebKey
@@ -86,12 +86,12 @@ func (h tokenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	l.Info("Start verifying challenge transaction.")
 
 	var clientAccountExists bool
-	clientAccount, err := h.HorizonClient.AccountDetail(horizonclient.AccountRequest{AccountID: clientAccountID})
+	clientAccount, err := h.MillenniumClient.AccountDetail(millenniumclient.AccountRequest{AccountID: clientAccountID})
 	switch {
 	case err == nil:
 		clientAccountExists = true
 		l.Infof("Account exists.")
-	case horizonclient.IsNotFoundError(err):
+	case millenniumclient.IsNotFoundError(err):
 		clientAccountExists = false
 		l.Infof("Account does not exist.")
 	default:
