@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"io"
 
-	xdr "github.com/stellar/go-xdr/xdr3"
+	xdr "github.com/aiblocks/go-xdr/xdr3"
 )
 
 // Unmarshal reads an xdr element from `r` into `v`.

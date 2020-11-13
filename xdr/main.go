@@ -11,7 +11,7 @@ import (
 	"io"
 	"strings"
 
-	xdr "github.com/stellar/go-xdr/xdr3"
+	xdr "github.com/aiblocks/go-xdr/xdr3"
 	"github.com/aiblocks/go/support/errors"
 )
 
