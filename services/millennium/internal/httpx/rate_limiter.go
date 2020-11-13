@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stellar/throttled"
+	"github.com/aiblocks/throttled"
 
 	"github.com/aiblocks/go/services/millennium/internal/ledger"
 	hProblem "github.com/aiblocks/go/services/millennium/internal/render/problem"

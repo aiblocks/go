@@ -14,7 +14,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/cors"
 	"github.com/sebest/xff"
-	"github.com/stellar/throttled"
+	"github.com/aiblocks/throttled"
 
 	"github.com/aiblocks/go/services/millennium/internal/actions"
 	"github.com/aiblocks/go/services/millennium/internal/paths"
