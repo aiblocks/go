@@ -19,10 +19,10 @@ import (
 	"github.com/aiblocks/go/xdr"
 )
 
-// One is the value of one whole unit of currency. AiBlocks uses 7 fixed digits
-// for fractional values, thus One is 10 million (10^7).
+// One is the value of one whole unit of currency. AiBlocks uses 8 fixed digits
+// for fractional values, thus One is 100 million (10^8).
 const (
-	One = 10000000
+	One = 100000000
 )
 
 var (
