@@ -4438,7 +4438,7 @@ var (
 //        uint32 ledgerSeq; // sequence number of this ledger
 //
 //        int64 totalCoins; // total number of sectors in existence.
-//                          // 10,000,000 sectors in 1 DLO
+//                          // 100,000,000 sectors in 1 DLO
 //
 //        int64 feePool;       // fees burned since last inflation run
 //        uint32 inflationSeq; // inflation sequence number
