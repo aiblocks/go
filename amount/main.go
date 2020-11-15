@@ -22,7 +22,7 @@ import (
 // One is the value of one whole unit of currency. AiBlocks uses 8 fixed digits
 // for fractional values, thus One is 100 million (10^8).
 const (
-	One = 100000000
+	One = 10000000
 )
 
 var (
