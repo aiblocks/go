@@ -5,7 +5,7 @@ import (
 
 	"github.com/aiblocks/go/services/millennium/internal/ledger"
 	"github.com/aiblocks/go/support/errors"
-	"github.com/aiblocks/throttled"
+	"github.com/stellar/throttled"
 )
 
 type LedgerSourceFactory interface {

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-	"github.com/aiblocks/throttled"
+	"github.com/stellar/throttled"
 )
 
 // Config is the configuration for millennium.  It gets populated by the

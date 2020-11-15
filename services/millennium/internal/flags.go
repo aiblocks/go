@@ -13,7 +13,7 @@ import (
 	support "github.com/aiblocks/go/support/config"
 	"github.com/aiblocks/go/support/db"
 	"github.com/aiblocks/go/support/log"
-	"github.com/aiblocks/throttled"
+	"github.com/stellar/throttled"
 )
 
 const (

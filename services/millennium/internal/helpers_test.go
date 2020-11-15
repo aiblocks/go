@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/aiblocks/throttled"
+	"github.com/stellar/throttled"
 
 	"github.com/aiblocks/go/network"
 	"github.com/aiblocks/go/services/millennium/internal/test"
